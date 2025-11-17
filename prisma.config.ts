@@ -5,6 +5,11 @@ import { defineConfig } from "prisma/config";
 function getDirectDatabaseUrl(): string {
   const dbUrl = process.env.DATABASE_URL || "";
   
+  // If DATABASE_URL is already a direct PostgreSQL URL, use it
+  if (dbUrl.startsWith("postgresql://") || dbUrl.startsWith("postgres://")) {
+    return dbUrl;
+  }
+  
   // If it's a Prisma Accelerate URL, extract the direct URL
   if (dbUrl.startsWith("prisma+postgres://")) {
     try {
@@ -12,7 +17,13 @@ function getDirectDatabaseUrl(): string {
       if (apiKey) {
         const decoded = Buffer.from(apiKey, "base64").toString("utf-8");
         const data = JSON.parse(decoded);
-        return data.databaseUrl || data.shadowDatabaseUrl || dbUrl;
+        const directUrl = data.databaseUrl || data.shadowDatabaseUrl;
+        // Only use extracted URL if it's not localhost (for production)
+        if (directUrl && !directUrl.includes("localhost")) {
+          return directUrl;
+        }
+        // For localhost, return the original Prisma Accelerate URL
+        return dbUrl;
       }
     } catch (error) {
       // If parsing fails, return original URL
@@ -20,6 +31,7 @@ function getDirectDatabaseUrl(): string {
     }
   }
   
+  // Fallback for development
   return dbUrl || "postgresql://dummy:dummy@localhost:5432/dummy";
 }
 
