@@ -45,14 +45,17 @@ export default function RequestForm({ onSubmit, onCancel }: RequestFormProps) {
       )}
 
       <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label
+          htmlFor="title"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
           Title *
         </label>
         <input
           type="text"
           id="title"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={e => setTitle(e.target.value)}
           className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
           placeholder="e.g., Leaky faucet in kitchen"
           required
@@ -60,13 +63,16 @@ export default function RequestForm({ onSubmit, onCancel }: RequestFormProps) {
       </div>
 
       <div>
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label
+          htmlFor="description"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
           Description *
         </label>
         <textarea
           id="description"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={e => setDescription(e.target.value)}
           rows={4}
           className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
           placeholder="Please provide details about the maintenance issue..."
@@ -75,13 +81,16 @@ export default function RequestForm({ onSubmit, onCancel }: RequestFormProps) {
       </div>
 
       <div>
-        <label htmlFor="priority" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label
+          htmlFor="priority"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
           Priority
         </label>
         <select
           id="priority"
           value={priority}
-          onChange={(e) => setPriority(e.target.value)}
+          onChange={e => setPriority(e.target.value)}
           className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
         >
           <option value="LOW">Low</option>
@@ -112,4 +121,3 @@ export default function RequestForm({ onSubmit, onCancel }: RequestFormProps) {
     </form>
   )
 }
-

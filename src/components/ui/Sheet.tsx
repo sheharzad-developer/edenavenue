@@ -41,13 +41,17 @@ const Sheet = ({ open, onOpenChange, side = 'left', children }: SheetProps) => {
         className={cn(
           'fixed z-50 bg-white p-6 shadow-lg transition-transform dark:bg-gray-900',
           sideClasses[side],
-          open ? 'translate-x-0 translate-y-0' : 
-            side === 'left' ? '-translate-x-full' :
-            side === 'right' ? 'translate-x-full' :
-            side === 'top' ? '-translate-y-full' :
-            'translate-y-full'
+          open
+            ? 'translate-x-0 translate-y-0'
+            : side === 'left'
+              ? '-translate-x-full'
+              : side === 'right'
+                ? 'translate-x-full'
+                : side === 'top'
+                  ? '-translate-y-full'
+                  : 'translate-y-full'
         )}
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
       >
         {children}
       </div>
@@ -56,10 +60,7 @@ const Sheet = ({ open, onOpenChange, side = 'left', children }: SheetProps) => {
 }
 
 const SheetHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn('flex flex-col space-y-2 text-center sm:text-left', className)}
-    {...props}
-  />
+  <div className={cn('flex flex-col space-y-2 text-center sm:text-left', className)} {...props} />
 )
 SheetHeader.displayName = 'SheetHeader'
 
@@ -82,15 +83,12 @@ const SheetTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTM
 )
 SheetTitle.displayName = 'SheetTitle'
 
-const SheetDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
-  ({ className, ...props }, ref) => (
-    <p
-      ref={ref}
-      className={cn('text-sm text-gray-500 dark:text-gray-400', className)}
-      {...props}
-    />
-  )
-)
+const SheetDescription = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, ...props }, ref) => (
+  <p ref={ref} className={cn('text-sm text-gray-500 dark:text-gray-400', className)} {...props} />
+))
 SheetDescription.displayName = 'SheetDescription'
 
 const SheetContent = ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
@@ -99,7 +97,11 @@ const SheetContent = ({ children, className, ...props }: React.HTMLAttributes<HT
   </div>
 )
 
-const SheetClose = ({ className, onClick, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
+const SheetClose = ({
+  className,
+  onClick,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
   <button
     className={cn(
       'absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:pointer-events-none dark:ring-offset-gray-900',
@@ -126,13 +128,4 @@ const SheetClose = ({ className, onClick, ...props }: React.ButtonHTMLAttributes
   </button>
 )
 
-export {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetFooter,
-  SheetTitle,
-  SheetDescription,
-  SheetClose,
-}
-
+export { Sheet, SheetContent, SheetHeader, SheetFooter, SheetTitle, SheetDescription, SheetClose }

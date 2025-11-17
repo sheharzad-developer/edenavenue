@@ -40,14 +40,14 @@ export default function RequestList({ userRole }: RequestListProps) {
       const params = new URLSearchParams()
       if (statusFilter) params.append('status', statusFilter)
       if (priorityFilter) params.append('priority', priorityFilter)
-      
+
       const url = `/api/requests${params.toString() ? `?${params.toString()}` : ''}`
       const res = await fetch(url)
-      
+
       if (!res.ok) {
         throw new Error('Failed to fetch requests')
       }
-      
+
       const data = await res.json()
       setRequests(data.requests || [])
     } catch (err) {
@@ -112,13 +112,16 @@ export default function RequestList({ userRole }: RequestListProps) {
       {/* Filters */}
       <div className="flex gap-4">
         <div>
-          <label htmlFor="status-filter" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label
+            htmlFor="status-filter"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          >
             Status
           </label>
           <select
             id="status-filter"
             value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
+            onChange={e => setStatusFilter(e.target.value)}
             className="mt-1 block rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
           >
             <option value="">All</option>
@@ -129,13 +132,16 @@ export default function RequestList({ userRole }: RequestListProps) {
           </select>
         </div>
         <div>
-          <label htmlFor="priority-filter" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label
+            htmlFor="priority-filter"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          >
             Priority
           </label>
           <select
             id="priority-filter"
             value={priorityFilter}
-            onChange={(e) => setPriorityFilter(e.target.value)}
+            onChange={e => setPriorityFilter(e.target.value)}
             className="mt-1 block rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
           >
             <option value="">All</option>
@@ -187,7 +193,7 @@ export default function RequestList({ userRole }: RequestListProps) {
                 </td>
               </tr>
             ) : (
-              requests.map((request) => (
+              requests.map(request => (
                 <tr key={request.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                   <td className="whitespace-nowrap px-6 py-4">
                     <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -198,7 +204,9 @@ export default function RequestList({ userRole }: RequestListProps) {
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-6 py-4">
-                    <span className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getStatusColor(request.status)}`}>
+                    <span
+                      className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getStatusColor(request.status)}`}
+                    >
                       {request.status.replace('_', ' ')}
                     </span>
                   </td>
@@ -237,4 +245,3 @@ export default function RequestList({ userRole }: RequestListProps) {
     </div>
   )
 }
-

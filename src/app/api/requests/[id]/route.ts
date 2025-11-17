@@ -3,13 +3,10 @@ import prisma from '@/lib/prisma'
 import { getSession } from '@/lib/auth'
 
 // GET /api/requests/[id] - Get a single request
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getSession()
-    
+
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -62,21 +59,15 @@ export async function GET(
     return NextResponse.json({ request })
   } catch (error) {
     console.error('Error fetching request:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch request' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch request' }, { status: 500 })
   }
 }
 
 // PATCH /api/requests/[id] - Update request (status, assign staff, etc.)
-export async function PATCH(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getSession()
-    
+
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -118,12 +109,9 @@ export async function PATCH(
       const assignee = await prisma.user.findUnique({
         where: { id: assigneeId },
       })
-      
+
       if (!assignee || !['ADMIN', 'MANAGER', 'MAINTENANCE'].includes(assignee.role)) {
-        return NextResponse.json(
-          { error: 'Invalid assignee' },
-          { status: 400 }
-        )
+        return NextResponse.json({ error: 'Invalid assignee' }, { status: 400 })
       }
     }
 
@@ -182,10 +170,6 @@ export async function PATCH(
     return NextResponse.json({ request })
   } catch (error) {
     console.error('Error updating request:', error)
-    return NextResponse.json(
-      { error: 'Failed to update request' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to update request' }, { status: 500 })
   }
 }
-

@@ -5,14 +5,18 @@ This directory contains CI/CD workflows for the project.
 ## Workflows
 
 ### `ci.yml`
+
 Runs on every push and pull request to `main` and `develop` branches:
+
 - Linting (ESLint)
 - Type checking (TypeScript)
 - Prisma schema validation
 - Code formatting check (Prettier)
 
 ### `pr-check.yml`
+
 Runs on pull requests to `main` and `develop`:
+
 - Same checks as CI workflow
 - Ensures code quality before merging
 
@@ -31,4 +35,3 @@ pnpm typecheck     # Type check
 pnpm format:check  # Check formatting
 pnpm format        # Format code
 ```
-

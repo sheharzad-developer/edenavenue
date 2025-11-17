@@ -11,7 +11,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, label, error, helperText, id, ...props }, ref) => {
     const generatedId = useId()
     const inputId = id || generatedId
-    
+
     return (
       <div className="w-full">
         {label && (
@@ -38,9 +38,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           {...props}
         />
-        {error && (
-          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{error}</p>
-        )}
+        {error && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{error}</p>}
         {helperText && !error && (
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{helperText}</p>
         )}
@@ -51,4 +49,3 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 Input.displayName = 'Input'
 
 export default Input
-

@@ -68,39 +68,33 @@ const DropdownMenuContent = ({ className, ...props }: React.HTMLAttributes<HTMLD
   <div className={cn('p-1', className)} {...props} />
 )
 
-const DropdownMenuItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement> & {
-  onSelect?: () => void
-}>(
-  ({ className, onSelect, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(
-        'relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-gray-100 focus:bg-gray-100 dark:hover:bg-gray-800 dark:focus:bg-gray-800',
-        className
-      )}
-      onClick={onSelect}
-      {...props}
-    />
-  )
-)
+const DropdownMenuItem = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & {
+    onSelect?: () => void
+  }
+>(({ className, onSelect, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      'relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-gray-100 focus:bg-gray-100 dark:hover:bg-gray-800 dark:focus:bg-gray-800',
+      className
+    )}
+    onClick={onSelect}
+    {...props}
+  />
+))
 DropdownMenuItem.displayName = 'DropdownMenuItem'
 
 const DropdownMenuLabel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn('px-2 py-1.5 text-sm font-semibold', className)}
-      {...props}
-    />
+    <div ref={ref} className={cn('px-2 py-1.5 text-sm font-semibold', className)} {...props} />
   )
 )
 DropdownMenuLabel.displayName = 'DropdownMenuLabel'
 
 const DropdownMenuSeparator = ({ className, ...props }: React.HTMLAttributes<HTMLHRElement>) => (
-  <hr
-    className={cn('my-1 border-gray-200 dark:border-gray-800', className)}
-    {...props}
-  />
+  <hr className={cn('my-1 border-gray-200 dark:border-gray-800', className)} {...props} />
 )
 DropdownMenuSeparator.displayName = 'DropdownMenuSeparator'
 
@@ -118,4 +112,3 @@ export {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 }
-

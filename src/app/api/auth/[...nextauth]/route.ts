@@ -11,7 +11,7 @@ export const authOptions = {
       name: 'Credentials',
       credentials: {
         email: { label: 'Email', type: 'text' },
-        password: { label: 'Password', type: 'password' }
+        password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
         if (!credentials) return null
@@ -20,29 +20,41 @@ export const authOptions = {
         const valid = await bcrypt.compare(credentials.password, user.password)
         if (!valid) return null
         return { id: user.id, email: user.email, name: user.name, role: user.role }
-      }
-    })
+      },
+    }),
   ],
   session: { strategy: 'jwt' as const },
   callbacks: {
-    async jwt({ token, user }: { token: { role?: string; id?: string }; user?: { id: string; role: string } }) {
+    async jwt({
+      token,
+      user,
+    }: {
+      token: { role?: string; id?: string }
+      user?: { id: string; role: string }
+    }) {
       if (user) {
         token.role = user.role
         token.id = user.id
       }
       return token
     },
-    async session({ session, token }: { session: { user?: { id?: string; role?: string } }; token: { id?: string; role?: string } }) {
+    async session({
+      session,
+      token,
+    }: {
+      session: { user?: { id?: string; role?: string } }
+      token: { id?: string; role?: string }
+    }) {
       if (session.user) {
         session.user.id = token.id as string
         session.user.role = token.role as string
       }
       return session
-    }
+    },
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: '/auth/signin',
+    signIn: '/auth/login',
   },
 }
 

@@ -6,7 +6,7 @@ import { getSession } from '@/lib/auth'
 export async function GET(req: Request) {
   try {
     const session = await getSession()
-    
+
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -21,17 +21,17 @@ export async function GET(req: Request) {
       status?: 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED'
       priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
     } = {}
-    
+
     // Residents can only see their own requests
     if (session.user.role === 'RESIDENT') {
       where.authorId = session.user.id
     }
-    
+
     // Filter by status if provided
     if (status && ['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'].includes(status)) {
       where.status = status as 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED'
     }
-    
+
     // Filter by priority if provided
     if (priority && ['LOW', 'MEDIUM', 'HIGH', 'URGENT'].includes(priority)) {
       where.priority = priority as 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
@@ -78,10 +78,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ requests })
   } catch (error) {
     console.error('Error fetching requests:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch requests' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch requests' }, { status: 500 })
   }
 }
 
@@ -89,7 +86,7 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const session = await getSession()
-    
+
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -98,10 +95,7 @@ export async function POST(req: Request) {
     const { title, description, priority } = body
 
     if (!title || !description) {
-      return NextResponse.json(
-        { error: 'Title and description are required' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Title and description are required' }, { status: 400 })
     }
 
     const request = await prisma.maintenanceRequest.create({
@@ -125,10 +119,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ request }, { status: 201 })
   } catch (error) {
     console.error('Error creating request:', error)
-    return NextResponse.json(
-      { error: 'Failed to create request' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to create request' }, { status: 500 })
   }
 }
-

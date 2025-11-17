@@ -3,17 +3,11 @@ import { cn } from '@/lib/utils'
 
 export type TableProps = React.HTMLAttributes<HTMLTableElement>
 
-const Table = React.forwardRef<HTMLTableElement, TableProps>(
-  ({ className, ...props }, ref) => (
-    <div className="relative w-full overflow-auto">
-      <table
-        ref={ref}
-        className={cn('w-full caption-bottom text-sm', className)}
-        {...props}
-      />
-    </div>
-  )
-)
+const Table = React.forwardRef<HTMLTableElement, TableProps>(({ className, ...props }, ref) => (
+  <div className="relative w-full overflow-auto">
+    <table ref={ref} className={cn('w-full caption-bottom text-sm', className)} {...props} />
+  </div>
+))
 Table.displayName = 'Table'
 
 export type TableHeaderProps = React.HTMLAttributes<HTMLTableSectionElement>
@@ -29,11 +23,7 @@ export type TableBodyProps = React.HTMLAttributes<HTMLTableSectionElement>
 
 const TableBody = React.forwardRef<HTMLTableSectionElement, TableBodyProps>(
   ({ className, ...props }, ref) => (
-    <tbody
-      ref={ref}
-      className={cn('[&_tr:last-child]:border-0', className)}
-      {...props}
-    />
+    <tbody ref={ref} className={cn('[&_tr:last-child]:border-0', className)} {...props} />
   )
 )
 TableBody.displayName = 'TableBody'
@@ -44,10 +34,7 @@ const TableFooter = React.forwardRef<HTMLTableSectionElement, TableFooterProps>(
   ({ className, ...props }, ref) => (
     <tfoot
       ref={ref}
-      className={cn(
-        'border-t bg-gray-100/50 font-medium dark:bg-gray-800/50',
-        className
-      )}
+      className={cn('border-t bg-gray-100/50 font-medium dark:bg-gray-800/50', className)}
       {...props}
     />
   )
@@ -112,14 +99,4 @@ const TableCaption = React.forwardRef<HTMLTableCaptionElement, TableCaptionProps
 )
 TableCaption.displayName = 'TableCaption'
 
-export {
-  Table,
-  TableHeader,
-  TableBody,
-  TableFooter,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableCaption,
-}
-
+export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption }

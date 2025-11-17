@@ -12,9 +12,23 @@ import Input from './Input'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from './Table'
 import { Form, FormGroup, FormLabel, FormError } from './Form'
 import Badge from './Badge'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from './Dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from './Dialog'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetClose } from './Sheet'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from './DropdownMenu'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from './DropdownMenu'
 
 export function ComponentExamples() {
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -142,7 +156,9 @@ export function ComponentExamples() {
               <p>Dialog content goes here</p>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
+              <Button variant="outline" onClick={() => setDialogOpen(false)}>
+                Cancel
+              </Button>
               <Button onClick={() => setDialogOpen(false)}>Confirm</Button>
             </DialogFooter>
             <DialogClose onClick={() => setDialogOpen(false)} />
@@ -193,20 +209,13 @@ export function ComponentExamples() {
           <DropdownMenuContent>
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onSelect={() => alert('Profile clicked')}>
-              Profile
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => alert('Settings clicked')}>
-              Settings
-            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => alert('Profile clicked')}>Profile</DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => alert('Settings clicked')}>Settings</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onSelect={() => alert('Logout clicked')}>
-              Logout
-            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => alert('Logout clicked')}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </section>
     </div>
   )
 }
-

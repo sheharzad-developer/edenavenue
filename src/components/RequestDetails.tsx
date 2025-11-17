@@ -53,11 +53,11 @@ export default function RequestDetails({ requestId, userRole, userId }: RequestD
     try {
       setLoading(true)
       const res = await fetch(`/api/requests/${requestId}`)
-      
+
       if (!res.ok) {
         throw new Error('Failed to fetch request')
       }
-      
+
       const data = await res.json()
       setRequest(data.request)
     } catch (err) {
@@ -145,7 +145,8 @@ export default function RequestDetails({ requestId, userRole, userId }: RequestD
     return <div>Request not found</div>
   }
 
-  const canEdit = ['ADMIN', 'MANAGER', 'MAINTENANCE'].includes(userRole || '') ||
+  const canEdit =
+    ['ADMIN', 'MANAGER', 'MAINTENANCE'].includes(userRole || '') ||
     (userRole === 'RESIDENT' && request.author?.id === userId && request.status === 'OPEN')
 
   return (
@@ -159,20 +160,30 @@ export default function RequestDetails({ requestId, userRole, userId }: RequestD
           </p>
         </div>
         <div className="flex gap-2">
-          <span className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${
-            request.status === 'OPEN' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' :
-            request.status === 'IN_PROGRESS' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' :
-            request.status === 'RESOLVED' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
-            'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300'
-          }`}>
+          <span
+            className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${
+              request.status === 'OPEN'
+                ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+                : request.status === 'IN_PROGRESS'
+                  ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300'
+                  : request.status === 'RESOLVED'
+                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                    : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300'
+            }`}
+          >
             {request.status.replace('_', ' ')}
           </span>
-          <span className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${
-            request.priority === 'URGENT' ? 'text-red-600 dark:text-red-400' :
-            request.priority === 'HIGH' ? 'text-orange-600 dark:text-orange-400' :
-            request.priority === 'MEDIUM' ? 'text-yellow-600 dark:text-yellow-400' :
-            'text-gray-600 dark:text-gray-400'
-          }`}>
+          <span
+            className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${
+              request.priority === 'URGENT'
+                ? 'text-red-600 dark:text-red-400'
+                : request.priority === 'HIGH'
+                  ? 'text-orange-600 dark:text-orange-400'
+                  : request.priority === 'MEDIUM'
+                    ? 'text-yellow-600 dark:text-yellow-400'
+                    : 'text-gray-600 dark:text-gray-400'
+            }`}
+          >
             {request.priority}
           </span>
         </div>
@@ -181,7 +192,9 @@ export default function RequestDetails({ requestId, userRole, userId }: RequestD
       {/* Description */}
       <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
         <h2 className="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">Description</h2>
-        <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{request.description}</p>
+        <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+          {request.description}
+        </p>
       </div>
 
       {/* Details */}
@@ -211,7 +224,7 @@ export default function RequestDetails({ requestId, userRole, userId }: RequestD
               <>
                 <select
                   value={request.status}
-                  onChange={(e) => handleStatusChange(e.target.value)}
+                  onChange={e => handleStatusChange(e.target.value)}
                   disabled={isUpdating}
                   className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                 >
@@ -229,13 +242,16 @@ export default function RequestDetails({ requestId, userRole, userId }: RequestD
       {/* Comments */}
       <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
         <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">Comments</h2>
-        
+
         <div className="mb-4 space-y-4">
           {request.comments.length === 0 ? (
             <p className="text-sm text-gray-500 dark:text-gray-400">No comments yet</p>
           ) : (
-            request.comments.map((comment) => (
-              <div key={comment.id} className="border-b border-gray-200 pb-4 last:border-0 dark:border-gray-700">
+            request.comments.map(comment => (
+              <div
+                key={comment.id}
+                className="border-b border-gray-200 pb-4 last:border-0 dark:border-gray-700"
+              >
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -257,7 +273,7 @@ export default function RequestDetails({ requestId, userRole, userId }: RequestD
         <form onSubmit={handleAddComment} className="mt-4">
           <textarea
             value={comment}
-            onChange={(e) => setComment(e.target.value)}
+            onChange={e => setComment(e.target.value)}
             rows={3}
             placeholder="Add a comment..."
             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
@@ -274,4 +290,3 @@ export default function RequestDetails({ requestId, userRole, userId }: RequestD
     </div>
   )
 }
-
