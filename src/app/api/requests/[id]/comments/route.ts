@@ -5,7 +5,7 @@ import { getSession } from '@/lib/auth'
 // POST /api/requests/[id]/comments - Add a comment to a request
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getSession()
@@ -14,6 +14,7 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const { id } = await params
     const body = await req.json()
     const { body: commentBody } = body
 
@@ -26,7 +27,7 @@ export async function POST(
 
     // Check if request exists
     const request = await prisma.maintenanceRequest.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!request) {
@@ -42,7 +43,7 @@ export async function POST(
       data: {
         body: commentBody.trim(),
         authorId: session.user.id,
-        requestId: params.id,
+        requestId: id,
       },
       include: {
         author: {

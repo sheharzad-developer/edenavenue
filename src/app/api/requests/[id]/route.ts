@@ -5,7 +5,7 @@ import { getSession } from '@/lib/auth'
 // GET /api/requests/[id] - Get a single request
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getSession()
@@ -14,8 +14,9 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const { id } = await params
     const request = await prisma.maintenanceRequest.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         author: {
           select: {
@@ -71,7 +72,7 @@ export async function GET(
 // PATCH /api/requests/[id] - Update request (status, assign staff, etc.)
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getSession()
@@ -80,12 +81,13 @@ export async function PATCH(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const { id } = await params
     const body = await req.json()
     const { status, priority, assigneeId } = body
 
     // Check if request exists
     const existingRequest = await prisma.maintenanceRequest.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!existingRequest) {
@@ -132,7 +134,7 @@ export async function PATCH(
     if (assigneeId !== undefined) updateData.assigneeId = assigneeId || null
 
     const request = await prisma.maintenanceRequest.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
       include: {
         author: {
