@@ -163,7 +163,7 @@ export default function RequestDetails({ requestId, userRole, userId }: RequestD
   }
 
   const canEdit = ['ADMIN', 'MANAGER', 'MAINTENANCE'].includes(userRole || '') ||
-    (userRole === 'RESIDENT' && request.authorId === userId && request.status === 'OPEN')
+    (userRole === 'RESIDENT' && request.author?.id === userId && request.status === 'OPEN')
 
   return (
     <div className="space-y-6">
