@@ -6,7 +6,7 @@ import { useEffect } from 'react'
 import RequestDetails from '@/components/RequestDetails'
 
 export default function RequestDetailsPage() {
-  const { data: session, status } = useSession()
+  const { status } = useSession()
   const router = useRouter()
   const params = useParams()
   const requestId = params?.id as string
@@ -49,11 +49,7 @@ export default function RequestDetailsPage() {
           ← Back to Requests
         </button>
       </div>
-      <RequestDetails
-        requestId={requestId}
-        userRole={(session?.user as { role?: string })?.role}
-        userId={(session?.user as { id?: string })?.id}
-      />
+      <RequestDetails id={requestId} />
     </div>
   )
 }

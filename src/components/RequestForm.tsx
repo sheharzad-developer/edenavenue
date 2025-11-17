@@ -1,82 +1,77 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Input from '@/components/ui/Input'
 import Textarea from '@/components/ui/Textarea'
-import Select from '@/components/ui/Select'
 import Button from '@/components/ui/Button'
+import Label from '@/components/ui/Label'
 
 interface RequestFormProps {
-  onSubmit: (data: { title: string; description: string; priority: string }) => Promise<void>
   onCancel?: () => void
 }
 
-export default function RequestForm({ onSubmit, onCancel }: RequestFormProps) {
+export default function RequestForm({ onCancel }: RequestFormProps) {
+  const router = useRouter()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [priority, setPriority] = useState('MEDIUM')
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState('')
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setError('')
 
-    if (!title.trim() || !description.trim()) {
-      setError('Title and description are required')
+    const res = await fetch('/api/requests', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, description, priority }),
+    })
+
+    if (!res.ok) {
+      const error = await res.json()
+      alert(error.error || 'Failed to submit request')
       return
     }
 
-    setIsSubmitting(true)
-    try {
-      await onSubmit({ title: title.trim(), description: description.trim(), priority })
-      setTitle('')
-      setDescription('')
-      setPriority('MEDIUM')
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create request')
-    } finally {
-      setIsSubmitting(false)
+    setTitle('')
+    setDescription('')
+    setPriority('MEDIUM')
+
+    if (onCancel) {
+      onCancel()
+      router.refresh()
+    } else {
+      router.push('/dashboard/requests')
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {error && (
-        <div className="rounded-md bg-red-50 p-4 text-red-800 dark:bg-red-900/20 dark:text-red-200">
-          {error}
-        </div>
-      )}
+    <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
+      <div>
+        <Label>Title</Label>
+        <Input value={title} onChange={(e) => setTitle(e.target.value)} required />
+      </div>
 
-      <Input
-        label="Title"
-        type="text"
-        value={title}
-        onChange={e => setTitle(e.target.value)}
-        placeholder="e.g., Leaky faucet in kitchen"
-        required
-      />
+      <div>
+        <Label>Description</Label>
+        <Textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
+      </div>
 
-      <Textarea
-        label="Description"
-        value={description}
-        onChange={e => setDescription(e.target.value)}
-        rows={4}
-        placeholder="Please provide details about the maintenance issue..."
-        required
-      />
-
-      <Select label="Priority" value={priority} onChange={e => setPriority(e.target.value)}>
-        <option value="LOW">Low</option>
-        <option value="MEDIUM">Medium</option>
-        <option value="HIGH">High</option>
-        <option value="URGENT">Urgent</option>
-      </Select>
+      <div>
+        <Label>Priority</Label>
+        <select
+          value={priority}
+          onChange={(e) => setPriority(e.target.value)}
+          className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:ring-offset-gray-900 dark:focus-visible:ring-blue-400"
+        >
+          <option value="LOW">Low</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="HIGH">High</option>
+          <option value="URGENT">Urgent</option>
+        </select>
+      </div>
 
       <div className="flex gap-3">
-        <Button type="submit" className="flex-1" isLoading={isSubmitting}>
-          Submit Request
-        </Button>
+        <Button type="submit">Submit Request</Button>
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel}>
             Cancel

@@ -3,10 +3,11 @@
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import RequestList from '@/components/RequestList'
+import RequestForm from '@/components/RequestForm'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
 
-export default function DashboardRequestsPage() {
+export default function CreateRequestPage() {
   const { status } = useSession()
   const router = useRouter()
 
@@ -15,6 +16,7 @@ export default function DashboardRequestsPage() {
       router.push('/auth/login')
     }
   }, [status, router])
+
 
   if (status === 'loading') {
     return (
@@ -30,21 +32,24 @@ export default function DashboardRequestsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-            Maintenance Requests
-          </h1>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            View and manage maintenance requests
-          </p>
-        </div>
-        <Button onClick={() => router.push('/dashboard/requests/create')}>
-          New Request
+      <div className="mb-6">
+        <Button variant="outline" onClick={() => router.back()}>
+          ← Back
         </Button>
       </div>
 
-      <RequestList />
+      <Card className="max-w-2xl mx-auto">
+        <CardHeader>
+          <CardTitle>Create Maintenance Request</CardTitle>
+          <CardDescription>
+            Submit a new maintenance request for your property
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <RequestForm />
+        </CardContent>
+      </Card>
     </div>
   )
 }
+

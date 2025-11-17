@@ -10,20 +10,9 @@ export default function RequestsPage() {
   const [showForm, setShowForm] = useState(false)
   const [refreshKey, setRefreshKey] = useState(0)
 
-  const handleSubmit = async (data: { title: string; description: string; priority: string }) => {
-    const res = await fetch('/api/requests', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    })
-
-    if (!res.ok) {
-      const error = await res.json()
-      throw new Error(error.error || 'Failed to create request')
-    }
-
+  const handleCancel = () => {
     setShowForm(false)
-    setRefreshKey(prev => prev + 1) // Trigger refresh
+    setRefreshKey((prev) => prev + 1)
   }
 
   if (!session) {
@@ -58,11 +47,11 @@ export default function RequestsPage() {
           <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-gray-100">
             Create New Request
           </h2>
-          <RequestForm onSubmit={handleSubmit} onCancel={() => setShowForm(false)} />
+          <RequestForm onCancel={handleCancel} />
         </div>
       )}
 
-      <RequestList key={refreshKey} userRole={(session.user as { role?: string })?.role} />
+      <RequestList key={refreshKey} />
     </div>
   )
 }

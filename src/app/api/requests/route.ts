@@ -2,11 +2,9 @@ import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { getSession } from '@/lib/auth'
 
-// GET /api/requests - List all requests (filtered by role)
 export async function GET(req: Request) {
   try {
     const session = await getSession()
-
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -15,64 +13,28 @@ export async function GET(req: Request) {
     const status = searchParams.get('status')
     const priority = searchParams.get('priority')
 
-    // Build where clause
     const where: {
       authorId?: string
       status?: 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED'
       priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
     } = {}
 
-    // Residents can only see their own requests
     if (session.user.role === 'RESIDENT') {
       where.authorId = session.user.id
     }
 
-    // Filter by status if provided
     if (status && ['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'].includes(status)) {
       where.status = status as 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED'
     }
 
-    // Filter by priority if provided
     if (priority && ['LOW', 'MEDIUM', 'HIGH', 'URGENT'].includes(priority)) {
       where.priority = priority as 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
     }
 
     const requests = await prisma.maintenanceRequest.findMany({
       where,
-      include: {
-        author: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-        assignedTo: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            role: true,
-          },
-        },
-        comments: {
-          include: {
-            author: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-              },
-            },
-          },
-          orderBy: {
-            createdAt: 'asc',
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      include: { author: true, assignedTo: true, comments: true },
+      orderBy: { createdAt: 'desc' },
     })
 
     return NextResponse.json({ requests })
@@ -82,11 +44,9 @@ export async function GET(req: Request) {
   }
 }
 
-// POST /api/requests - Create a new maintenance request
 export async function POST(req: Request) {
   try {
     const session = await getSession()
-
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -95,25 +55,17 @@ export async function POST(req: Request) {
     const { title, description, priority } = body
 
     if (!title || !description) {
-      return NextResponse.json({ error: 'Title and description are required' }, { status: 400 })
+      return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
     }
 
     const request = await prisma.maintenanceRequest.create({
       data: {
         title,
         description,
-        priority: priority || 'MEDIUM',
         authorId: session.user.id,
+        priority: priority || 'MEDIUM',
       },
-      include: {
-        author: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-      },
+      include: { author: true, assignedTo: true, comments: true },
     })
 
     return NextResponse.json({ request }, { status: 201 })
