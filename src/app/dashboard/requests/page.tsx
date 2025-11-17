@@ -21,11 +21,7 @@ export default function DashboardRequestsPage() {
     }
   }, [status, router])
 
-  const handleSubmit = async (data: {
-    title: string
-    description: string
-    priority: string
-  }) => {
+  const handleSubmit = async (data: { title: string; description: string; priority: string }) => {
     const res = await fetch('/api/requests', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -38,7 +34,7 @@ export default function DashboardRequestsPage() {
     }
 
     setShowForm(false)
-    setRefreshKey((prev) => prev + 1) // Trigger refresh
+    setRefreshKey(prev => prev + 1) // Trigger refresh
   }
 
   if (status === 'loading') {
@@ -86,4 +82,3 @@ export default function DashboardRequestsPage() {
     </div>
   )
 }
-

@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import Input from '@/components/ui/Input'
+import Textarea from '@/components/ui/Textarea'
+import Select from '@/components/ui/Select'
 import Button from '@/components/ui/Button'
 
 interface RequestFormProps {
@@ -50,48 +52,30 @@ export default function RequestForm({ onSubmit, onCancel }: RequestFormProps) {
         label="Title"
         type="text"
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={e => setTitle(e.target.value)}
         placeholder="e.g., Leaky faucet in kitchen"
         required
       />
 
-      <div>
-        <label
-          htmlFor="description"
-          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-        >
-          Description *
-        </label>
-        <textarea
-          id="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          rows={4}
-          className="flex w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:ring-offset-gray-900 dark:placeholder:text-gray-400 dark:focus-visible:ring-blue-400"
-          placeholder="Please provide details about the maintenance issue..."
-          required
-        />
-      </div>
+      <Textarea
+        label="Description"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        rows={4}
+        placeholder="Please provide details about the maintenance issue..."
+        required
+      />
 
-      <div>
-        <label
-          htmlFor="priority"
-          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-        >
-          Priority
-        </label>
-        <select
-          id="priority"
-          value={priority}
-          onChange={(e) => setPriority(e.target.value)}
-          className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:ring-offset-gray-900 dark:focus-visible:ring-blue-400"
-        >
-          <option value="LOW">Low</option>
-          <option value="MEDIUM">Medium</option>
-          <option value="HIGH">High</option>
-          <option value="URGENT">Urgent</option>
-        </select>
-      </div>
+      <Select
+        label="Priority"
+        value={priority}
+        onChange={(e) => setPriority(e.target.value)}
+      >
+        <option value="LOW">Low</option>
+        <option value="MEDIUM">Medium</option>
+        <option value="HIGH">High</option>
+        <option value="URGENT">Urgent</option>
+      </Select>
 
       <div className="flex gap-3">
         <Button type="submit" className="flex-1" isLoading={isSubmitting}>

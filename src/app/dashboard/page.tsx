@@ -63,7 +63,11 @@ export default function DashboardPage() {
             <CardTitle>Quick Actions</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            <Button variant="outline" className="w-full" onClick={() => router.push('/dashboard/requests')}>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => router.push('/dashboard/requests')}
+            >
               View Maintenance Requests
             </Button>
             {['ADMIN', 'MANAGER'].includes(userRole) && (

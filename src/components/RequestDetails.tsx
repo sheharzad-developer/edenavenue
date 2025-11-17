@@ -48,7 +48,9 @@ export default function RequestDetails({ requestId, userRole, userId }: RequestD
   const [comment, setComment] = useState('')
   const [isSubmittingComment, setIsSubmittingComment] = useState(false)
   const [isUpdating, setIsUpdating] = useState(false)
-  const [staff, setStaff] = useState<Array<{ id: string; name: string | null; email: string; role: string }>>([])
+  const [staff, setStaff] = useState<
+    Array<{ id: string; name: string | null; email: string; role: string }>
+  >([])
   const [loadingStaff, setLoadingStaff] = useState(false)
 
   const fetchRequest = useCallback(async () => {
@@ -266,7 +268,7 @@ export default function RequestDetails({ requestId, userRole, userId }: RequestD
                   </label>
                   <select
                     value={request.status}
-                    onChange={(e) => handleStatusChange(e.target.value)}
+                    onChange={e => handleStatusChange(e.target.value)}
                     disabled={isUpdating}
                     className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                   >
@@ -283,12 +285,12 @@ export default function RequestDetails({ requestId, userRole, userId }: RequestD
                     </label>
                     <select
                       value={request.assignedTo?.id || ''}
-                      onChange={(e) => handleAssign(e.target.value || null)}
+                      onChange={e => handleAssign(e.target.value || null)}
                       disabled={isUpdating || loadingStaff}
                       className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white min-w-[200px]"
                     >
                       <option value="">Unassigned</option>
-                      {staff.map((member) => (
+                      {staff.map(member => (
                         <option key={member.id} value={member.id}>
                           {member.name || member.email} ({member.role})
                         </option>

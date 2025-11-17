@@ -87,3 +87,27 @@ export {
   DropdownMenuTrigger,
 } from './DropdownMenu'
 export type { DropdownMenuProps } from './DropdownMenu'
+
+// Alert
+export { Alert, AlertTitle, AlertDescription } from './Alert'
+export type { AlertProps } from './Alert'
+
+// Label
+export { default as Label } from './Label'
+export type { LabelProps } from './Label'
+
+// Select
+export { default as Select } from './Select'
+export type { SelectProps } from './Select'
+
+// Separator
+export { default as Separator } from './Separator'
+export type { SeparatorProps } from './Separator'
+
+// Tabs
+export { Tabs, TabsList, TabsTrigger, TabsContent } from './Tabs'
+export type { TabsProps } from './Tabs'
+
+// Textarea
+export { default as Textarea } from './Textarea'
+export type { TextareaProps } from './Textarea'

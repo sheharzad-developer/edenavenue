@@ -2,6 +2,15 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/Table'
+import Badge from '@/components/ui/Badge'
 
 interface MaintenanceRequest {
   id: string
@@ -60,21 +69,6 @@ export default function RequestList({ userRole }: RequestListProps) {
   useEffect(() => {
     fetchRequests()
   }, [fetchRequests])
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'OPEN':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
-      case 'IN_PROGRESS':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300'
-      case 'RESOLVED':
-        return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
-      case 'CLOSED':
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300'
-      default:
-        return 'bg-gray-100 text-gray-800'
-    }
-  }
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -154,93 +148,81 @@ export default function RequestList({ userRole }: RequestListProps) {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead className="bg-gray-50 dark:bg-gray-800">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                Title
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                Status
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                Priority
-              </th>
-              {userRole !== 'RESIDENT' && (
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                  Author
-                </th>
-              )}
-              {['ADMIN', 'MANAGER'].includes(userRole || '') && (
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                  Assigned To
-                </th>
-              )}
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                Created
-              </th>
-              <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900">
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Title</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Priority</TableHead>
+              {userRole !== 'RESIDENT' && <TableHead>Author</TableHead>}
+              {['ADMIN', 'MANAGER'].includes(userRole || '') && <TableHead>Assigned To</TableHead>}
+              <TableHead>Created</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {requests.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+              <TableRow>
+                <TableCell colSpan={7} className="h-24 text-center">
                   No requests found
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ) : (
-              requests.map(request => (
-                <tr key={request.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
-                  <td className="whitespace-nowrap px-6 py-4">
-                    <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                      {request.title}
-                    </div>
+              requests.map((request) => (
+                <TableRow key={request.id}>
+                  <TableCell>
+                    <div className="font-medium">{request.title}</div>
                     <div className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">
                       {request.description}
                     </div>
-                  </td>
-                  <td className="whitespace-nowrap px-6 py-4">
-                    <span
-                      className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getStatusColor(request.status)}`}
+                  </TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={
+                        request.status === 'OPEN'
+                          ? 'default'
+                          : request.status === 'IN_PROGRESS'
+                            ? 'warning'
+                            : request.status === 'RESOLVED'
+                              ? 'success'
+                              : 'secondary'
+                      }
                     >
                       {request.status.replace('_', ' ')}
-                    </span>
-                  </td>
-                  <td className="whitespace-nowrap px-6 py-4">
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
                     <span className={`text-sm ${getPriorityColor(request.priority)}`}>
                       {request.priority}
                     </span>
-                  </td>
+                  </TableCell>
                   {userRole !== 'RESIDENT' && (
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                    <TableCell className="text-sm text-gray-500 dark:text-gray-400">
                       {request.author?.name || request.author?.email || 'N/A'}
-                    </td>
+                    </TableCell>
                   )}
                   {['ADMIN', 'MANAGER'].includes(userRole || '') && (
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                    <TableCell className="text-sm text-gray-500 dark:text-gray-400">
                       {request.assignedTo?.name || request.assignedTo?.email || 'Unassigned'}
-                    </td>
+                    </TableCell>
                   )}
-                  <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                  <TableCell className="text-sm text-gray-500 dark:text-gray-400">
                     {new Date(request.createdAt).toLocaleDateString()}
-                  </td>
-                  <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+                  </TableCell>
+                  <TableCell className="text-right">
                     <Link
                       href={`/dashboard/requests/${request.id}`}
                       className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
                     >
                       View
                     </Link>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))
             )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
     </div>
   )
