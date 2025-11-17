@@ -10,29 +10,17 @@ function getDirectDatabaseUrl(): string {
     return dbUrl;
   }
   
-  // If it's a Prisma Accelerate URL, extract the direct URL
+  // If it's a Prisma Accelerate URL pointing to localhost, skip it for migrations
+  // Migrations should use direct database URLs, not Prisma Accelerate
   if (dbUrl.startsWith("prisma+postgres://")) {
-    try {
-      const apiKey = dbUrl.split("api_key=")[1];
-      if (apiKey) {
-        const decoded = Buffer.from(apiKey, "base64").toString("utf-8");
-        const data = JSON.parse(decoded);
-        const directUrl = data.databaseUrl || data.shadowDatabaseUrl;
-        // Only use extracted URL if it's not localhost (for production)
-        if (directUrl && !directUrl.includes("localhost")) {
-          return directUrl;
-        }
-        // For localhost, return the original Prisma Accelerate URL
-        return dbUrl;
-      }
-    } catch (error) {
-      // If parsing fails, return original URL
-      console.warn("Failed to parse Prisma Accelerate URL, using as-is");
-    }
+    // For migrations, we need a direct connection, not Prisma Accelerate
+    // Return empty string to force error if no direct URL is available
+    console.warn("Prisma Accelerate URLs are not supported for migrations. Please use a direct PostgreSQL connection string.");
+    return "";
   }
   
-  // Fallback for development
-  return dbUrl || "postgresql://dummy:dummy@localhost:5432/dummy";
+  // Fallback - return empty to force explicit DATABASE_URL
+  return dbUrl || "";
 }
 
 export default defineConfig({
