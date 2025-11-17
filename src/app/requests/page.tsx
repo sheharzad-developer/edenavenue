@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import RequestForm from '@/components/RequestForm'
 import RequestList from '@/components/RequestList'
@@ -56,7 +56,7 @@ export default function RequestsPage() {
         </div>
       )}
 
-      <RequestList key={refreshKey} userRole={session.user?.role} />
+      <RequestList key={refreshKey} userRole={(session.user as { role?: string })?.role} />
     </div>
   )
 }

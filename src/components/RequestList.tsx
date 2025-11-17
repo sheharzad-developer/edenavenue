@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 
 interface MaintenanceRequest {
@@ -34,7 +34,7 @@ export default function RequestList({ userRole }: RequestListProps) {
   const [statusFilter, setStatusFilter] = useState<string>('')
   const [priorityFilter, setPriorityFilter] = useState<string>('')
 
-  const fetchRequests = async () => {
+  const fetchRequests = useCallback(async () => {
     try {
       setLoading(true)
       const params = new URLSearchParams()
@@ -55,11 +55,11 @@ export default function RequestList({ userRole }: RequestListProps) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [statusFilter, priorityFilter])
 
   useEffect(() => {
     fetchRequests()
-  }, [statusFilter, priorityFilter])
+  }, [fetchRequests])
 
   const getStatusColor = (status: string) => {
     switch (status) {

@@ -14,7 +14,7 @@ import { Form, FormGroup, FormLabel, FormError } from './Form'
 import Badge from './Badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from './Dialog'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetClose } from './Sheet'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from './DropdownMenu'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from './DropdownMenu'
 
 export function ComponentExamples() {
   const [dialogOpen, setDialogOpen] = useState(false)

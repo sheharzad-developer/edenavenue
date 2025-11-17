@@ -1,7 +1,7 @@
 import React from 'react'
 import { cn } from '@/lib/utils'
 
-export interface FormProps extends React.FormHTMLAttributes<HTMLFormElement> {}
+export type FormProps = React.FormHTMLAttributes<HTMLFormElement>
 
 const Form = React.forwardRef<HTMLFormElement, FormProps>(
   ({ className, ...props }, ref) => (
@@ -10,7 +10,7 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>(
 )
 Form.displayName = 'Form'
 
-export interface FormGroupProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type FormGroupProps = React.HTMLAttributes<HTMLDivElement>
 
 const FormGroup = React.forwardRef<HTMLDivElement, FormGroupProps>(
   ({ className, ...props }, ref) => (
@@ -40,7 +40,7 @@ const FormLabel = React.forwardRef<HTMLLabelElement, FormLabelProps>(
 )
 FormLabel.displayName = 'FormLabel'
 
-export interface FormErrorProps extends React.HTMLAttributes<HTMLParagraphElement> {}
+export type FormErrorProps = React.HTMLAttributes<HTMLParagraphElement>
 
 const FormError = React.forwardRef<HTMLParagraphElement, FormErrorProps>(
   ({ className, ...props }, ref) => (
@@ -53,7 +53,7 @@ const FormError = React.forwardRef<HTMLParagraphElement, FormErrorProps>(
 )
 FormError.displayName = 'FormError'
 
-export interface FormHelperTextProps extends React.HTMLAttributes<HTMLParagraphElement> {}
+export type FormHelperTextProps = React.HTMLAttributes<HTMLParagraphElement>
 
 const FormHelperText = React.forwardRef<HTMLParagraphElement, FormHelperTextProps>(
   ({ className, ...props }, ref) => (

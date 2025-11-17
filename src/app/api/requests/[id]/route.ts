@@ -128,10 +128,20 @@ export async function PATCH(
     }
 
     // Build update data
-    const updateData: any = {}
-    if (status) updateData.status = status
-    if (priority) updateData.priority = priority
-    if (assigneeId !== undefined) updateData.assigneeId = assigneeId || null
+    const updateData: {
+      status?: 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED'
+      priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
+      assigneeId?: string | null
+    } = {}
+    if (status && ['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'].includes(status)) {
+      updateData.status = status as 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED'
+    }
+    if (priority && ['LOW', 'MEDIUM', 'HIGH', 'URGENT'].includes(priority)) {
+      updateData.priority = priority as 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
+    }
+    if (assigneeId !== undefined) {
+      updateData.assigneeId = assigneeId || null
+    }
 
     const request = await prisma.maintenanceRequest.update({
       where: { id },

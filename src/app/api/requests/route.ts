@@ -16,7 +16,11 @@ export async function GET(req: Request) {
     const priority = searchParams.get('priority')
 
     // Build where clause
-    const where: any = {}
+    const where: {
+      authorId?: string
+      status?: 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED'
+      priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
+    } = {}
     
     // Residents can only see their own requests
     if (session.user.role === 'RESIDENT') {
@@ -24,13 +28,13 @@ export async function GET(req: Request) {
     }
     
     // Filter by status if provided
-    if (status) {
-      where.status = status
+    if (status && ['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'].includes(status)) {
+      where.status = status as 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED'
     }
     
     // Filter by priority if provided
-    if (priority) {
-      where.priority = priority
+    if (priority && ['LOW', 'MEDIUM', 'HIGH', 'URGENT'].includes(priority)) {
+      where.priority = priority as 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
     }
 
     const requests = await prisma.maintenanceRequest.findMany({

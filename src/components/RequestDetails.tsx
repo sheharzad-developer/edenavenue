@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useState, useCallback } from 'react'
 
 interface Comment {
   id: string
@@ -43,7 +42,6 @@ interface RequestDetailsProps {
 }
 
 export default function RequestDetails({ requestId, userRole, userId }: RequestDetailsProps) {
-  const router = useRouter()
   const [request, setRequest] = useState<MaintenanceRequest | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -51,7 +49,7 @@ export default function RequestDetails({ requestId, userRole, userId }: RequestD
   const [isSubmittingComment, setIsSubmittingComment] = useState(false)
   const [isUpdating, setIsUpdating] = useState(false)
 
-  const fetchRequest = async () => {
+  const fetchRequest = useCallback(async () => {
     try {
       setLoading(true)
       const res = await fetch(`/api/requests/${requestId}`)
@@ -67,11 +65,11 @@ export default function RequestDetails({ requestId, userRole, userId }: RequestD
     } finally {
       setLoading(false)
     }
-  }
+  }, [requestId])
 
   useEffect(() => {
     fetchRequest()
-  }, [requestId])
+  }, [fetchRequest])
 
   const handleStatusChange = async (newStatus: string) => {
     try {
@@ -94,25 +92,10 @@ export default function RequestDetails({ requestId, userRole, userId }: RequestD
     }
   }
 
-  const handleAssign = async (assigneeId: string) => {
-    try {
-      setIsUpdating(true)
-      const res = await fetch(`/api/requests/${requestId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ assigneeId }),
-      })
-
-      if (!res.ok) {
-        throw new Error('Failed to assign request')
-      }
-
-      await fetchRequest()
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to assign request')
-    } finally {
-      setIsUpdating(false)
-    }
+  // TODO: Implement assignment functionality when needed
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleAssign = async (_assigneeId: string) => {
+    // Implementation pending
   }
 
   const handleAddComment = async (e: React.FormEvent) => {

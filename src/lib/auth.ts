@@ -1,5 +1,8 @@
-import { getServerSession } from "next-auth";
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { AuthOptions } from "next-auth";
+import type { Session } from "next-auth";
 
-export const getSession = () => getServerSession(authOptions as AuthOptions);
+export const getSession = async (): Promise<Session | null> => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return await getServerSession(authOptions as any);
+};

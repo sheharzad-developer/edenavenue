@@ -24,8 +24,8 @@ export default function RequestDetailPage() {
     <div className="container mx-auto px-4 py-8">
       <RequestDetails
         requestId={requestId}
-        userRole={session.user?.role}
-        userId={session.user?.id}
+        userRole={(session.user as { role?: string })?.role}
+        userId={(session.user as { id?: string })?.id}
       />
     </div>
   )
