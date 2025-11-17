@@ -48,6 +48,8 @@ export default function RequestDetails({ requestId, userRole, userId }: RequestD
   const [comment, setComment] = useState('')
   const [isSubmittingComment, setIsSubmittingComment] = useState(false)
   const [isUpdating, setIsUpdating] = useState(false)
+  const [staff, setStaff] = useState<Array<{ id: string; name: string | null; email: string; role: string }>>([])
+  const [loadingStaff, setLoadingStaff] = useState(false)
 
   const fetchRequest = useCallback(async () => {
     try {
@@ -71,6 +73,27 @@ export default function RequestDetails({ requestId, userRole, userId }: RequestD
     fetchRequest()
   }, [fetchRequest])
 
+  // Fetch staff members for assignment (Admin/Manager only)
+  useEffect(() => {
+    const fetchStaff = async () => {
+      if (['ADMIN', 'MANAGER'].includes(userRole || '')) {
+        try {
+          setLoadingStaff(true)
+          const res = await fetch('/api/users/staff')
+          if (res.ok) {
+            const data = await res.json()
+            setStaff(data.staff || [])
+          }
+        } catch {
+          // Silently fail - assignment dropdown will just be empty
+        } finally {
+          setLoadingStaff(false)
+        }
+      }
+    }
+    fetchStaff()
+  }, [userRole])
+
   const handleStatusChange = async (newStatus: string) => {
     try {
       setIsUpdating(true)
@@ -92,10 +115,25 @@ export default function RequestDetails({ requestId, userRole, userId }: RequestD
     }
   }
 
-  // TODO: Implement assignment functionality when needed
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleAssign = async (_assigneeId: string) => {
-    // Implementation pending
+  const handleAssign = async (assigneeId: string | null) => {
+    try {
+      setIsUpdating(true)
+      const res = await fetch(`/api/requests/${requestId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ assigneeId: assigneeId || null }),
+      })
+
+      if (!res.ok) {
+        throw new Error('Failed to assign request')
+      }
+
+      await fetchRequest()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to assign request')
+    } finally {
+      setIsUpdating(false)
+    }
   }
 
   const handleAddComment = async (e: React.FormEvent) => {
@@ -222,17 +260,42 @@ export default function RequestDetails({ requestId, userRole, userId }: RequestD
           <div className="flex flex-wrap gap-3">
             {['ADMIN', 'MANAGER', 'MAINTENANCE'].includes(userRole || '') && (
               <>
-                <select
-                  value={request.status}
-                  onChange={e => handleStatusChange(e.target.value)}
-                  disabled={isUpdating}
-                  className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                >
-                  <option value="OPEN">Open</option>
-                  <option value="IN_PROGRESS">In Progress</option>
-                  <option value="RESOLVED">Resolved</option>
-                  <option value="CLOSED">Closed</option>
-                </select>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Status
+                  </label>
+                  <select
+                    value={request.status}
+                    onChange={(e) => handleStatusChange(e.target.value)}
+                    disabled={isUpdating}
+                    className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                  >
+                    <option value="OPEN">Open</option>
+                    <option value="IN_PROGRESS">In Progress</option>
+                    <option value="RESOLVED">Resolved</option>
+                    <option value="CLOSED">Closed</option>
+                  </select>
+                </div>
+                {['ADMIN', 'MANAGER'].includes(userRole || '') && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Assign To
+                    </label>
+                    <select
+                      value={request.assignedTo?.id || ''}
+                      onChange={(e) => handleAssign(e.target.value || null)}
+                      disabled={isUpdating || loadingStaff}
+                      className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white min-w-[200px]"
+                    >
+                      <option value="">Unassigned</option>
+                      {staff.map((member) => (
+                        <option key={member.id} value={member.id}>
+                          {member.name || member.email} ({member.role})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
               </>
             )}
           </div>

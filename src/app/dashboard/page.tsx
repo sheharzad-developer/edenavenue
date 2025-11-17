@@ -40,12 +40,8 @@ export default function DashboardPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-            Dashboard
-          </h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">
-            Welcome back, {userName}!
-          </p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Dashboard</h1>
+          <p className="mt-2 text-gray-600 dark:text-gray-400">Welcome back, {userName}!</p>
         </div>
         <Button variant="outline" onClick={handleSignOut}>
           Sign out
@@ -67,11 +63,7 @@ export default function DashboardPage() {
             <CardTitle>Quick Actions</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() => router.push('/requests')}
-            >
+            <Button variant="outline" className="w-full" onClick={() => router.push('/dashboard/requests')}>
               View Maintenance Requests
             </Button>
             {['ADMIN', 'MANAGER'].includes(userRole) && (
@@ -100,4 +92,3 @@ export default function DashboardPage() {
     </div>
   )
 }
-

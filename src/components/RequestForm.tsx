@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import Input from '@/components/ui/Input'
+import Button from '@/components/ui/Button'
 
 interface RequestFormProps {
   onSubmit: (data: { title: string; description: string; priority: string }) => Promise<void>
@@ -44,37 +46,28 @@ export default function RequestForm({ onSubmit, onCancel }: RequestFormProps) {
         </div>
       )}
 
-      <div>
-        <label
-          htmlFor="title"
-          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-        >
-          Title *
-        </label>
-        <input
-          type="text"
-          id="title"
-          value={title}
-          onChange={e => setTitle(e.target.value)}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
-          placeholder="e.g., Leaky faucet in kitchen"
-          required
-        />
-      </div>
+      <Input
+        label="Title"
+        type="text"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="e.g., Leaky faucet in kitchen"
+        required
+      />
 
       <div>
         <label
           htmlFor="description"
-          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
         >
           Description *
         </label>
         <textarea
           id="description"
           value={description}
-          onChange={e => setDescription(e.target.value)}
+          onChange={(e) => setDescription(e.target.value)}
           rows={4}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+          className="flex w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:ring-offset-gray-900 dark:placeholder:text-gray-400 dark:focus-visible:ring-blue-400"
           placeholder="Please provide details about the maintenance issue..."
           required
         />
@@ -83,15 +76,15 @@ export default function RequestForm({ onSubmit, onCancel }: RequestFormProps) {
       <div>
         <label
           htmlFor="priority"
-          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
         >
           Priority
         </label>
         <select
           id="priority"
           value={priority}
-          onChange={e => setPriority(e.target.value)}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+          onChange={(e) => setPriority(e.target.value)}
+          className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:ring-offset-gray-900 dark:focus-visible:ring-blue-400"
         >
           <option value="LOW">Low</option>
           <option value="MEDIUM">Medium</option>
@@ -101,21 +94,13 @@ export default function RequestForm({ onSubmit, onCancel }: RequestFormProps) {
       </div>
 
       <div className="flex gap-3">
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="flex-1 rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-600"
-        >
-          {isSubmitting ? 'Submitting...' : 'Submit Request'}
-        </button>
+        <Button type="submit" className="flex-1" isLoading={isSubmitting}>
+          Submit Request
+        </Button>
         {onCancel && (
-          <button
-            type="button"
-            onClick={onCancel}
-            className="rounded-md border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
-          >
+          <Button type="button" variant="outline" onClick={onCancel}>
             Cancel
-          </button>
+          </Button>
         )}
       </div>
     </form>

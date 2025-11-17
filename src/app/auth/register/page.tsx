@@ -6,13 +6,7 @@ import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from '@/components/ui/Card'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -96,9 +90,7 @@ export default function RegisterPage() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl">Create an account</CardTitle>
-          <CardDescription>
-            Enter your information to create a new account
-          </CardDescription>
+          <CardDescription>Enter your information to create a new account</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -112,7 +104,7 @@ export default function RegisterPage() {
               label="Name"
               type="text"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={e => setFormData({ ...formData, name: e.target.value })}
               placeholder="Your name"
               autoComplete="name"
             />
@@ -121,7 +113,7 @@ export default function RegisterPage() {
               label="Email"
               type="email"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={e => setFormData({ ...formData, email: e.target.value })}
               placeholder="you@example.com"
               required
               autoComplete="email"
@@ -133,7 +125,7 @@ export default function RegisterPage() {
               </label>
               <select
                 value={formData.role}
-                onChange={(e) =>
+                onChange={e =>
                   setFormData({
                     ...formData,
                     role: e.target.value as typeof formData.role,
@@ -153,9 +145,7 @@ export default function RegisterPage() {
               label="Password"
               type="password"
               value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
+              onChange={e => setFormData({ ...formData, password: e.target.value })}
               placeholder="At least 6 characters"
               required
               autoComplete="new-password"
@@ -165,9 +155,7 @@ export default function RegisterPage() {
               label="Confirm Password"
               type="password"
               value={formData.confirmPassword}
-              onChange={(e) =>
-                setFormData({ ...formData, confirmPassword: e.target.value })
-              }
+              onChange={e => setFormData({ ...formData, confirmPassword: e.target.value })}
               placeholder="Confirm your password"
               required
               autoComplete="new-password"
@@ -192,4 +180,3 @@ export default function RegisterPage() {
     </div>
   )
 }
-

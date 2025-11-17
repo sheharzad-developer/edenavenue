@@ -6,13 +6,7 @@ import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from '@/components/ui/Card'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card'
 
 export default function ForgotPasswordPage() {
   const router = useRouter()
@@ -61,8 +55,7 @@ export default function ForgotPasswordPage() {
         <CardHeader>
           <CardTitle className="text-2xl">Reset your password</CardTitle>
           <CardDescription>
-            Enter your email address and we&apos;ll send you a link to reset your
-            password
+            Enter your email address and we&apos;ll send you a link to reset your password
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -77,7 +70,7 @@ export default function ForgotPasswordPage() {
               label="Email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
               placeholder="you@example.com"
               required
               autoComplete="email"
@@ -102,4 +95,3 @@ export default function ForgotPasswordPage() {
     </div>
   )
 }
-
