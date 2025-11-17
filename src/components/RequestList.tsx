@@ -169,7 +169,7 @@ export default function RequestList({ userRole }: RequestListProps) {
                 </TableCell>
               </TableRow>
             ) : (
-              requests.map((request) => (
+              requests.map(request => (
                 <TableRow key={request.id}>
                   <TableCell>
                     <div className="font-medium">{request.title}</div>

@@ -38,9 +38,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         >
           {children}
         </select>
-        {error && (
-          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{error}</p>
-        )}
+        {error && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{error}</p>}
         {helperText && !error && (
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{helperText}</p>
         )}
@@ -51,4 +49,3 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
 Select.displayName = 'Select'
 
 export default Select
-

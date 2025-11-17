@@ -60,17 +60,13 @@ export default function RequestForm({ onSubmit, onCancel }: RequestFormProps) {
       <Textarea
         label="Description"
         value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        onChange={e => setDescription(e.target.value)}
         rows={4}
         placeholder="Please provide details about the maintenance issue..."
         required
       />
 
-      <Select
-        label="Priority"
-        value={priority}
-        onChange={(e) => setPriority(e.target.value)}
-      >
+      <Select label="Priority" value={priority} onChange={e => setPriority(e.target.value)}>
         <option value="LOW">Low</option>
         <option value="MEDIUM">Medium</option>
         <option value="HIGH">High</option>
