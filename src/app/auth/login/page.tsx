@@ -21,19 +21,6 @@ export default function LoginPage() {
     setShowForm(true)
   }, [])
 
-  // Redirect if authenticated (only once, with a guard)
-  useEffect(() => {
-    if (status === 'authenticated' && session && typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search)
-      const callbackUrl = params.get('callbackUrl') || '/dashboard'
-      // Small delay to prevent rapid redirects
-      const timer = setTimeout(() => {
-        window.location.href = callbackUrl
-      }, 100)
-      return () => clearTimeout(timer)
-    }
-  }, [status, session])
-
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
     setError('')
@@ -59,10 +46,10 @@ export default function LoginPage() {
       })
 
       if (res?.ok) {
-        // Wait a moment for session to be set
-        await new Promise(resolve => setTimeout(resolve, 100))
-        // Use replace to avoid adding to history
-        router.replace(callbackUrl)
+        // Wait a moment for session to be set, then redirect
+        await new Promise(resolve => setTimeout(resolve, 200))
+        // Force a full page navigation to prevent loops
+        window.location.href = callbackUrl
       } else {
         // Show user-friendly error message
         const errorMessage =
