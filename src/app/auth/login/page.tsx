@@ -1,18 +1,28 @@
 'use client'
 
-import { useState } from 'react'
-import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect, Suspense } from 'react'
+import { signIn, useSession } from 'next-auth/react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import Label from '@/components/ui/Label'
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const { data: session, status } = useSession()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (status === 'authenticated' && session) {
+      const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
+      router.push(callbackUrl)
+    }
+  }, [status, session, router, searchParams])
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
@@ -26,14 +36,19 @@ export default function LoginPage() {
     }
 
     try {
+      const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
+
       const res = await signIn('credentials', {
         redirect: false,
         email: email.trim(),
         password,
+        callbackUrl,
       })
 
       if (res?.ok) {
-        router.push('/dashboard')
+        // Wait a moment for session to be set
+        await new Promise(resolve => setTimeout(resolve, 100))
+        router.push(callbackUrl)
         router.refresh()
       } else {
         // Show user-friendly error message
@@ -42,7 +57,7 @@ export default function LoginPage() {
             ? 'Invalid email or password. Please check your credentials and try again.'
             : res?.error || 'Login failed. Please try again.'
         setError(errorMessage)
-        console.error('Login failed:', res?.error)
+        console.error('Login failed:', res?.error, res)
       }
     } catch (error) {
       console.error('Login error:', error)
@@ -50,6 +65,18 @@ export default function LoginPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  if (status === 'loading') {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-gray-600 dark:text-gray-400">Loading...</div>
+      </div>
+    )
+  }
+
+  if (status === 'authenticated') {
+    return null // Will redirect via useEffect
   }
 
   return (
@@ -100,5 +127,19 @@ export default function LoginPage() {
         </div>
       </form>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <div className="text-gray-600 dark:text-gray-400">Loading...</div>
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   )
 }
