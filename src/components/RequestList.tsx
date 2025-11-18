@@ -163,6 +163,8 @@ export default function RequestList() {
               <th className="border border-border px-4 py-3 text-left font-semibold">Author</th>
               <th className="border border-border px-4 py-3 text-left font-semibold">Status</th>
               <th className="border border-border px-4 py-3 text-left font-semibold">Priority</th>
+              <th className="border border-border px-4 py-3 text-left font-semibold">Created</th>
+              <th className="border border-border px-4 py-3 text-left font-semibold">Updated</th>
               <th className="border border-border px-4 py-3 text-left font-semibold">Actions</th>
             </tr>
           </thead>
@@ -190,6 +192,26 @@ export default function RequestList() {
                   >
                     {req.priority}
                   </Badge>
+                </td>
+                <td className="border border-border px-4 py-3 text-sm text-muted-foreground">
+                  {new Date(req.createdAt).toLocaleDateString()}
+                  <br />
+                  <span className="text-xs">
+                    {new Date(req.createdAt).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </span>
+                </td>
+                <td className="border border-border px-4 py-3 text-sm text-muted-foreground">
+                  {new Date(req.updatedAt).toLocaleDateString()}
+                  <br />
+                  <span className="text-xs">
+                    {new Date(req.updatedAt).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </span>
                 </td>
                 <td className="border border-border px-4 py-3">
                   <Button
