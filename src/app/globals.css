@@ -4,104 +4,93 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-
-    --foreground: 0 0% 3.9%;
+    /* Beautiful Light Theme - Modern Blue/Purple Palette */
+    --background: 240 20% 99%;
+    --foreground: 240 10% 3.9%;
 
     --card: 0 0% 100%;
-
-    --card-foreground: 0 0% 3.9%;
+    --card-foreground: 240 10% 3.9%;
 
     --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
 
-    --popover-foreground: 0 0% 3.9%;
+    /* Primary - Beautiful Blue */
+    --primary: 221 83% 53%;
+    --primary-foreground: 0 0% 100%;
 
-    --primary: 0 0% 9%;
+    /* Secondary - Soft Purple */
+    --secondary: 262 52% 47%;
+    --secondary-foreground: 0 0% 100%;
 
-    --primary-foreground: 0 0% 98%;
+    /* Muted - Light Gray with Blue Tint */
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
 
-    --secondary: 0 0% 96.1%;
+    /* Accent - Vibrant Purple */
+    --accent: 262 83% 58%;
+    --accent-foreground: 0 0% 100%;
 
-    --secondary-foreground: 0 0% 9%;
-
-    --muted: 0 0% 96.1%;
-
-    --muted-foreground: 0 0% 45.1%;
-
-    --accent: 0 0% 96.1%;
-
-    --accent-foreground: 0 0% 9%;
-
+    /* Destructive - Modern Red */
     --destructive: 0 84.2% 60.2%;
-
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 89.8%;
+    /* Borders and Inputs */
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 221 83% 53%;
 
-    --input: 0 0% 89.8%;
+    /* Chart Colors - Beautiful Palette */
+    --chart-1: 221 83% 53%;
+    --chart-2: 262 83% 58%;
+    --chart-3: 280 65% 60%;
+    --chart-4: 197 100% 50%;
+    --chart-5: 173 80% 40%;
 
-    --ring: 0 0% 3.9%;
-
-    --chart-1: 12 76% 61%;
-
-    --chart-2: 173 58% 39%;
-
-    --chart-3: 197 37% 24%;
-
-    --chart-4: 43 74% 66%;
-
-    --chart-5: 27 87% 67%;
-
-    --radius: 0.5rem;
+    --radius: 0.75rem;
   }
-  .dark {
-    --background: 0 0% 3.9%;
 
+  .dark {
+    /* Beautiful Dark Theme - Deep Blue/Purple */
+    --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
 
-    --card: 0 0% 3.9%;
-
+    --card: 240 10% 6%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 3.9%;
-
+    --popover: 240 10% 6%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 0 0% 98%;
+    /* Primary - Bright Blue */
+    --primary: 221 83% 53%;
+    --primary-foreground: 0 0% 100%;
 
-    --primary-foreground: 0 0% 9%;
+    /* Secondary - Rich Purple */
+    --secondary: 262 52% 47%;
+    --secondary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 14.9%;
+    /* Muted - Dark Gray with Blue Tint */
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
 
-    --secondary-foreground: 0 0% 98%;
+    /* Accent - Vibrant Purple */
+    --accent: 262 83% 58%;
+    --accent-foreground: 0 0% 100%;
 
-    --muted: 0 0% 14.9%;
-
-    --muted-foreground: 0 0% 63.9%;
-
-    --accent: 0 0% 14.9%;
-
-    --accent-foreground: 0 0% 98%;
-
+    /* Destructive */
     --destructive: 0 62.8% 30.6%;
-
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 14.9%;
+    /* Borders and Inputs */
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 221 83% 53%;
 
-    --input: 0 0% 14.9%;
-
-    --ring: 0 0% 83.1%;
-
-    --chart-1: 220 70% 50%;
-
-    --chart-2: 160 60% 45%;
-
-    --chart-3: 30 80% 55%;
-
-    --chart-4: 280 65% 60%;
-
-    --chart-5: 340 75% 55%;
+    /* Chart Colors - Vibrant Dark Theme */
+    --chart-1: 221 83% 53%;
+    --chart-2: 262 83% 58%;
+    --chart-3: 280 65% 60%;
+    --chart-4: 197 100% 50%;
+    --chart-5: 173 80% 40%;
   }
 }
 
@@ -111,5 +100,42 @@
   }
   body {
     @apply bg-background text-foreground;
+    @apply transition-colors duration-200;
+  }
+}
+
+@layer utilities {
+  /* Beautiful gradient backgrounds */
+  .gradient-primary {
+    background: linear-gradient(135deg, hsl(221, 83%, 53%) 0%, hsl(262, 83%, 58%) 100%);
+  }
+
+  .gradient-card {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%);
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, hsl(221, 83%, 53%) 0%, hsl(262, 83%, 58%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Smooth shadows */
+  .shadow-glow {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+
+  .shadow-glow-purple {
+    box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+  }
+
+  /* Beautiful hover effects */
+  .hover-lift {
+    @apply transition-all duration-300;
+  }
+
+  .hover-lift:hover {
+    @apply -translate-y-1 shadow-lg;
   }
 }

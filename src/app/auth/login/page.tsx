@@ -97,64 +97,69 @@ export default function LoginPage() {
   // Show form immediately, don't wait for session check
   if (!showForm) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Eden Avenue Management
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+          <h2 className="text-4xl font-bold gradient-text mb-2">Eden Avenue Management</h2>
+          <p className="text-muted-foreground">Loading...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="max-w-md mx-auto mt-20">
-      <div className="mb-8 text-center">
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-          Eden Avenue Management
-        </h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-12">
+      <div className="max-w-md w-full">
+        <div className="mb-8 text-center">
+          <h2 className="text-4xl font-bold gradient-text mb-2">Eden Avenue Management</h2>
+          <p className="text-muted-foreground">Welcome back</p>
+        </div>
+        <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-xl border border-border/50 p-8 hover-lift">
+          <h1 className="text-2xl font-bold mb-6 text-foreground">Login</h1>
+          <form onSubmit={handleLogin} className="space-y-4">
+            {error && (
+              <div className="rounded-md bg-red-50 p-4 text-red-800 dark:bg-red-900/20 dark:text-red-200">
+                {error}
+              </div>
+            )}
+            <div>
+              <Label>Email</Label>
+              <Input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+                disabled={loading}
+              />
+            </div>
+            <div>
+              <Label>Password</Label>
+              <Input
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required
+                disabled={loading}
+              />
+            </div>
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full gradient-primary hover:opacity-90 transition-opacity"
+            >
+              {loading ? 'Logging in...' : 'Login'}
+            </Button>
+            <div className="text-center text-sm text-muted-foreground mt-4">
+              Don&apos;t have an account?{' '}
+              <a
+                href="/auth/register"
+                className="font-medium text-primary hover:text-primary/80 transition-colors"
+              >
+                Sign up
+              </a>
+            </div>
+          </form>
+        </div>
       </div>
-      <h1 className="text-2xl font-bold mb-4">Login</h1>
-      <form onSubmit={handleLogin} className="space-y-4">
-        {error && (
-          <div className="rounded-md bg-red-50 p-4 text-red-800 dark:bg-red-900/20 dark:text-red-200">
-            {error}
-          </div>
-        )}
-        <div>
-          <Label>Email</Label>
-          <Input
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            required
-            disabled={loading}
-          />
-        </div>
-        <div>
-          <Label>Password</Label>
-          <Input
-            type="password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            required
-            disabled={loading}
-          />
-        </div>
-        <Button type="submit" disabled={loading} className="w-full">
-          {loading ? 'Logging in...' : 'Login'}
-        </Button>
-        <div className="text-center text-sm text-gray-600 dark:text-gray-400">
-          Don&apos;t have an account?{' '}
-          <a
-            href="/auth/register"
-            className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400"
-          >
-            Sign up
-          </a>
-        </div>
-      </form>
     </div>
   )
 }

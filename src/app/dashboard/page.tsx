@@ -19,8 +19,11 @@ export default function DashboardPage() {
 
   if (status === 'loading') {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-gray-600 dark:text-gray-400">Loading...</div>
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div className="text-center">
+          <h2 className="text-4xl font-bold gradient-text mb-2">Eden Avenue Management</h2>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
       </div>
     )
   }
@@ -37,61 +40,61 @@ export default function DashboardPage() {
   const userName = session?.user?.name || session?.user?.email || 'User'
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Dashboard</h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">Welcome back, {userName}!</p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold gradient-text mb-2">Dashboard</h1>
+            <p className="text-muted-foreground text-lg">Welcome back, {userName}!</p>
+          </div>
+          <Button variant="outline" onClick={handleSignOut} className="hover-lift">
+            Sign out
+          </Button>
         </div>
-        <Button variant="outline" onClick={handleSignOut}>
-          Sign out
-        </Button>
-      </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <CardTitle>Your Role</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-semibold">{userRole}</p>
-          </CardContent>
-        </Card>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <Card className="hover-lift border-border/50 shadow-lg">
+            <CardHeader>
+              <CardTitle className="text-primary">Your Role</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold gradient-text">{userRole}</p>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() => router.push('/dashboard/requests')}
-            >
-              View Maintenance Requests
-            </Button>
-            {['ADMIN', 'MANAGER'].includes(userRole) && (
+          <Card className="hover-lift border-border/50 shadow-lg">
+            <CardHeader>
+              <CardTitle className="text-primary">Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
               <Button
                 variant="outline"
-                className="w-full"
-                onClick={() => router.push('/properties')}
+                className="w-full hover-lift"
+                onClick={() => router.push('/dashboard/requests')}
               >
-                Manage Properties
+                View Maintenance Requests
               </Button>
-            )}
-          </CardContent>
-        </Card>
+              {['ADMIN', 'MANAGER'].includes(userRole) && (
+                <Button
+                  variant="outline"
+                  className="w-full hover-lift"
+                  onClick={() => router.push('/properties')}
+                >
+                  Manage Properties
+                </Button>
+              )}
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Account Info</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Email: {session?.user?.email}
-            </p>
-          </CardContent>
-        </Card>
+          <Card className="hover-lift border-border/50 shadow-lg">
+            <CardHeader>
+              <CardTitle className="text-primary">Account Info</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">Email: {session?.user?.email}</p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   )
