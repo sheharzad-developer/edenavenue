@@ -72,6 +72,19 @@ export async function POST(req: Request) {
     return NextResponse.json({ request }, { status: 201 })
   } catch (error) {
     console.error('Error creating request:', error)
-    return NextResponse.json({ error: 'Failed to create request' }, { status: 500 })
+    const errorMessage = error instanceof Error ? error.message : 'Failed to create request'
+
+    // Check for database schema errors
+    if (errorMessage.includes('Unknown column') || errorMessage.includes('houseNumber')) {
+      return NextResponse.json(
+        {
+          error:
+            'Database migration needed. Please ensure migrations have been run on the database.',
+        },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }

@@ -29,6 +29,7 @@ export default function RequestForm({ onCancel }: RequestFormProps) {
 
     if (!res.ok) {
       const error = await res.json()
+      console.error('Request creation error:', error)
       alert(error.error || 'Failed to submit request')
       return
     }
