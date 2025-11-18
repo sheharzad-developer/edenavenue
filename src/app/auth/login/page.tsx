@@ -1,28 +1,32 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect } from 'react'
 import { signIn, useSession } from 'next-auth/react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import Label from '@/components/ui/Label'
 
-function LoginForm() {
+export default function LoginPage() {
   const router = useRouter()
-  const searchParams = useSearchParams()
   const { data: session, status } = useSession()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  // Redirect if already logged in
+  // Get callbackUrl from URL
   useEffect(() => {
-    if (status === 'authenticated' && session) {
-      const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
-      router.push(callbackUrl)
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      const callbackUrl = params.get('callbackUrl') || '/dashboard'
+
+      // Redirect if already logged in
+      if (status === 'authenticated' && session) {
+        router.push(callbackUrl)
+      }
     }
-  }, [status, session, router, searchParams])
+  }, [status, session, router])
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
@@ -36,7 +40,10 @@ function LoginForm() {
     }
 
     try {
-      const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
+      const callbackUrl =
+        typeof window !== 'undefined'
+          ? new URLSearchParams(window.location.search).get('callbackUrl') || '/dashboard'
+          : '/dashboard'
 
       const res = await signIn('credentials', {
         redirect: false,
@@ -127,19 +134,5 @@ function LoginForm() {
         </div>
       </form>
     </div>
-  )
-}
-
-export default function LoginPage() {
-  return (
-    <Suspense
-      fallback={
-        <div className="flex min-h-screen items-center justify-center">
-          <div className="text-gray-600 dark:text-gray-400">Loading...</div>
-        </div>
-      }
-    >
-      <LoginForm />
-    </Suspense>
   )
 }
