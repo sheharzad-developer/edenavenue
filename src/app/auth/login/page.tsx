@@ -52,10 +52,20 @@ export default function LoginPage() {
       console.log('Response Status:', res?.status)
 
       if (res?.ok) {
-        console.log('✅ Login successful! Redirecting to dashboard...')
+        console.log('✅ Login successful!')
+
+        // Get callbackUrl from URL if provided by middleware, otherwise use /dashboard
+        const urlParams = new URLSearchParams(window.location.search)
+        const callbackUrl = urlParams.get('callbackUrl') || '/dashboard'
+        console.log('Redirecting to:', callbackUrl)
+
+        // Wait a moment for session cookie to be set before redirecting
+        // This prevents middleware from seeing an unauthenticated state
+        await new Promise(resolve => setTimeout(resolve, 500))
+
         // Always use full page reload for serverless environments
         // This ensures session cookies are properly set
-        window.location.href = '/dashboard'
+        window.location.href = callbackUrl
       } else {
         console.log('❌ Login failed')
         // Show user-friendly error message
