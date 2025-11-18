@@ -83,6 +83,15 @@ export default function DashboardPage() {
                   Manage Properties
                 </Button>
               )}
+              {userRole === 'ADMIN' && (
+                <Button
+                  variant="outline"
+                  className="w-full hover-lift"
+                  onClick={() => router.push('/users')}
+                >
+                  View All Users
+                </Button>
+              )}
             </CardContent>
           </Card>
 
