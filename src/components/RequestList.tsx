@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
 import {
   Dialog,
   DialogContent,
@@ -12,12 +13,14 @@ import Badge from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
 
 export default function RequestList() {
+  const { data: session } = useSession()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [requests, setRequests] = useState<any[]>([])
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selectedRequest, setSelectedRequest] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [updating, setUpdating] = useState(false)
 
   useEffect(() => {
     fetch('/api/requests')
@@ -38,6 +41,41 @@ export default function RequestList() {
       setLoading(false)
     }
   }
+
+  async function handleUpdateStatus(newStatus: 'IN_PROGRESS' | 'RESOLVED') {
+    if (!selectedRequest) return
+
+    setUpdating(true)
+    try {
+      const res = await fetch(`/api/requests/${selectedRequest.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      })
+
+      if (!res.ok) {
+        const error = await res.json()
+        alert(error.error || 'Failed to update status')
+        return
+      }
+
+      const data = await res.json()
+      setSelectedRequest(data.updated)
+
+      // Refresh the requests list
+      const listRes = await fetch('/api/requests')
+      const listData = await listRes.json()
+      setRequests(listData.requests || [])
+    } catch (error) {
+      console.error('Error updating status:', error)
+      alert('Failed to update status')
+    } finally {
+      setUpdating(false)
+    }
+  }
+
+  const userRole = (session?.user as { role?: string })?.role
+  const canUpdateStatus = ['ADMIN', 'MANAGER', 'MAINTENANCE'].includes(userRole || '')
 
   function getStatusColor(status: string) {
     switch (status) {
@@ -157,6 +195,29 @@ export default function RequestList() {
                   </Badge>
                 </div>
               </div>
+
+              {canUpdateStatus &&
+                selectedRequest.status !== 'RESOLVED' &&
+                selectedRequest.status !== 'CLOSED' && (
+                  <div className="flex gap-3 pt-2">
+                    {selectedRequest.status === 'OPEN' && (
+                      <Button
+                        onClick={() => handleUpdateStatus('IN_PROGRESS')}
+                        disabled={updating}
+                        className="gradient-primary hover:opacity-90 transition-opacity"
+                      >
+                        {updating ? 'Updating...' : 'Progress'}
+                      </Button>
+                    )}
+                    <Button
+                      onClick={() => handleUpdateStatus('RESOLVED')}
+                      disabled={updating}
+                      className="bg-green-600 text-white hover:bg-green-700 transition-colors"
+                    >
+                      {updating ? 'Updating...' : 'Done'}
+                    </Button>
+                  </div>
+                )}
 
               {selectedRequest.houseNumber && (
                 <div>
