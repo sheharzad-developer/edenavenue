@@ -13,7 +13,7 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [showForm, setShowForm] = useState(false)
 
-  // Show form immediately
+  // Show form immediately - no delay
   useEffect(() => {
     setShowForm(true)
   }, [])
