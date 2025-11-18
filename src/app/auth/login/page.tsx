@@ -1,12 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { signIn } from 'next-auth/react'
+import { signIn, getSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import Label from '@/components/ui/Label'
 
 export default function LoginPage() {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -42,11 +44,26 @@ export default function LoginPage() {
         callbackUrl,
       })
 
+      console.log('Login response:', res) // Debug log
+
       if (res?.ok) {
-        // Wait a moment for session to be set, then redirect
-        await new Promise(resolve => setTimeout(resolve, 200))
-        // Force a full page navigation to prevent loops
-        window.location.href = callbackUrl
+        console.log('Login successful, redirecting to:', callbackUrl)
+        // Wait for session to be established
+        await new Promise(resolve => setTimeout(resolve, 300))
+
+        // Verify session was created
+        const session = await getSession()
+        console.log('Session after login:', session)
+
+        if (session) {
+          // Use router.push for client-side navigation (faster)
+          router.push(callbackUrl)
+          router.refresh() // Refresh to ensure session is available
+        } else {
+          // Fallback to full page reload if session not ready
+          console.warn('Session not ready, using full page reload')
+          window.location.href = callbackUrl
+        }
       } else {
         // Show user-friendly error message
         const errorMessage =
