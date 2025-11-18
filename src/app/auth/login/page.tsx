@@ -30,25 +30,19 @@ export default function LoginPage() {
     }
 
     try {
-      const callbackUrl =
-        typeof window !== 'undefined'
-          ? new URLSearchParams(window.location.search).get('callbackUrl') || '/dashboard'
-          : '/dashboard'
-
       const res = await signIn('credentials', {
         redirect: false,
         email: email.trim(),
         password,
-        callbackUrl,
       })
 
       console.log('Login response:', res) // Debug log
 
       if (res?.ok) {
-        console.log('Login successful, redirecting to:', callbackUrl)
+        console.log('Login successful, redirecting to dashboard')
         // Always use full page reload for serverless environments
         // This ensures session cookies are properly set
-        window.location.href = callbackUrl
+        window.location.href = '/dashboard'
       } else {
         // Show user-friendly error message
         const errorMessage =
