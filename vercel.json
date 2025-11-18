@@ -1,4 +1,7 @@
 {
   "framework": "nextjs",
-  "regions": ["iad1"]
+  "regions": ["iad1"],
+  "env": {
+    "PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING": "1"
+  }
 }
