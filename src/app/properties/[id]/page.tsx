@@ -56,6 +56,7 @@ export default function PropertyDetailsPage() {
     if (status === 'authenticated' && propertyId) {
       fetchProperty()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, propertyId])
 
   async function fetchProperty() {
