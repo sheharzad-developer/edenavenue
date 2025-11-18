@@ -2,20 +2,55 @@
 
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { signOut } from 'next-auth/react'
 import Button from '@/components/ui/Button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
+import Badge from '@/components/ui/Badge'
+
+interface RequestStats {
+  open: number
+  inProgress: number
+  resolved: number
+  closed: number
+  total: number
+  recentRequests: number
+  unassigned: number
+}
 
 export default function DashboardPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
+  const [stats, setStats] = useState<RequestStats | null>(null)
+  const [loadingStats, setLoadingStats] = useState(false)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/auth/login')
     }
   }, [status, router])
+
+  useEffect(() => {
+    const userRole = (session?.user as { role?: string })?.role
+    if (status === 'authenticated' && ['ADMIN', 'MANAGER'].includes(userRole || '')) {
+      fetchStats()
+    }
+  }, [status, session])
+
+  async function fetchStats() {
+    setLoadingStats(true)
+    try {
+      const res = await fetch('/api/requests/stats')
+      if (res.ok) {
+        const data = await res.json()
+        setStats(data.stats)
+      }
+    } catch (error) {
+      console.error('Error fetching stats:', error)
+    } finally {
+      setLoadingStats(false)
+    }
+  }
 
   if (status === 'loading') {
     return (
@@ -52,6 +87,52 @@ export default function DashboardPage() {
           </Button>
         </div>
 
+        {['ADMIN', 'MANAGER'].includes(userRole) && stats && (
+          <div className="mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <Card className="hover-lift border-border/50 shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-primary text-sm">Open Requests</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-3xl font-bold text-blue-500">{stats.open}</p>
+                {stats.unassigned > 0 && (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {stats.unassigned} unassigned
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card className="hover-lift border-border/50 shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-primary text-sm">In Progress</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-3xl font-bold text-yellow-500">{stats.inProgress}</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover-lift border-border/50 shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-primary text-sm">Resolved</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-3xl font-bold text-green-500">{stats.resolved}</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover-lift border-border/50 shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-primary text-sm">New (24h)</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-3xl font-bold gradient-text">{stats.recentRequests}</p>
+                <p className="text-xs text-muted-foreground mt-1">Recent complaints</p>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <Card className="hover-lift border-border/50 shadow-lg">
             <CardHeader>
@@ -67,13 +148,20 @@ export default function DashboardPage() {
               <CardTitle className="text-primary">Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Button
-                variant="outline"
-                className="w-full hover-lift"
-                onClick={() => router.push('/dashboard/requests')}
-              >
-                View Maintenance Requests
-              </Button>
+              <div className="relative">
+                <Button
+                  variant="outline"
+                  className="w-full hover-lift"
+                  onClick={() => router.push('/dashboard/requests')}
+                >
+                  View Maintenance Requests
+                </Button>
+                {stats && stats.open > 0 && (
+                  <Badge className="absolute -top-2 -right-2 bg-red-500 text-white px-2 py-0.5 text-xs font-bold">
+                    {stats.open}
+                  </Badge>
+                )}
+              </div>
               {['ADMIN', 'MANAGER'].includes(userRole) && (
                 <Button
                   variant="outline"
