@@ -14,17 +14,22 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [showForm, setShowForm] = useState(false)
 
-  // Get callbackUrl from URL
+  // Show form after a short delay, even if session is still loading
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    const timer = setTimeout(() => {
+      setShowForm(true)
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Get callbackUrl from URL and redirect if authenticated
+  useEffect(() => {
+    if (status === 'authenticated' && session) {
       const params = new URLSearchParams(window.location.search)
       const callbackUrl = params.get('callbackUrl') || '/dashboard'
-
-      // Redirect if already logged in
-      if (status === 'authenticated' && session) {
-        router.push(callbackUrl)
-      }
+      router.push(callbackUrl)
     }
   }, [status, session, router])
 
@@ -74,16 +79,27 @@ export default function LoginPage() {
     }
   }
 
-  if (status === 'loading') {
+  // Show form if authenticated check is done or timeout passed
+  if (status === 'authenticated') {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-gray-600 dark:text-gray-400">Loading...</div>
+        <div className="text-gray-600 dark:text-gray-400">Redirecting...</div>
       </div>
     )
   }
 
-  if (status === 'authenticated') {
-    return null // Will redirect via useEffect
+  // Show loading only briefly, then show form
+  if (status === 'loading' && !showForm) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            Eden Avenue Management
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
