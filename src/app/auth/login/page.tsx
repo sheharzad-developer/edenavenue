@@ -1,15 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { signIn, useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { signIn } from 'next-auth/react'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import Label from '@/components/ui/Label'
 
 export default function LoginPage() {
-  const router = useRouter()
-  const { data: session, status } = useSession()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
