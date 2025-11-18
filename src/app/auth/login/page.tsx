@@ -12,15 +12,23 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
+    setError('')
     setLoading(true)
+
+    if (!email || !password) {
+      setError('Please enter both email and password')
+      setLoading(false)
+      return
+    }
 
     try {
       const res = await signIn('credentials', {
         redirect: false,
-        email,
+        email: email.trim(),
         password,
       })
 
@@ -33,11 +41,12 @@ export default function LoginPage() {
           res?.error === 'CredentialsSignin'
             ? 'Invalid email or password. Please check your credentials and try again.'
             : res?.error || 'Login failed. Please try again.'
-        alert(errorMessage)
+        setError(errorMessage)
+        console.error('Login failed:', res?.error)
       }
     } catch (error) {
       console.error('Login error:', error)
-      alert('An error occurred during login. Please try again.')
+      setError('An error occurred during login. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -52,9 +61,20 @@ export default function LoginPage() {
       </div>
       <h1 className="text-2xl font-bold mb-4">Login</h1>
       <form onSubmit={handleLogin} className="space-y-4">
+        {error && (
+          <div className="rounded-md bg-red-50 p-4 text-red-800 dark:bg-red-900/20 dark:text-red-200">
+            {error}
+          </div>
+        )}
         <div>
           <Label>Email</Label>
-          <Input type="email" value={email} onChange={e => setEmail(e.target.value)} required />
+          <Input
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            required
+            disabled={loading}
+          />
         </div>
         <div>
           <Label>Password</Label>
@@ -63,6 +83,7 @@ export default function LoginPage() {
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
+            disabled={loading}
           />
         </div>
         <Button type="submit" disabled={loading} className="w-full">
