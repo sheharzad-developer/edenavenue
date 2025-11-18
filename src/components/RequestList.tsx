@@ -11,6 +11,8 @@ import {
 } from '@/components/ui/Dialog'
 import Badge from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
+import Input from '@/components/ui/Input'
+import Label from '@/components/ui/Label'
 
 export default function RequestList() {
   const { data: session } = useSession()
@@ -21,6 +23,8 @@ export default function RequestList() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [updating, setUpdating] = useState(false)
+  const [showDatePicker, setShowDatePicker] = useState(false)
+  const [selectedDate, setSelectedDate] = useState('')
 
   useEffect(() => {
     fetch('/api/requests')
@@ -42,7 +46,48 @@ export default function RequestList() {
     }
   }
 
-  async function handleUpdateStatus(newStatus: 'IN_PROGRESS' | 'RESOLVED') {
+  function handleProgressClick() {
+    setShowDatePicker(true)
+  }
+
+  async function handleConfirmProgress() {
+    if (!selectedRequest || !selectedDate) {
+      alert('Please select a date')
+      return
+    }
+
+    setUpdating(true)
+    setShowDatePicker(false)
+    try {
+      const res = await fetch(`/api/requests/${selectedRequest.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'IN_PROGRESS' }),
+      })
+
+      if (!res.ok) {
+        const error = await res.json()
+        alert(error.error || 'Failed to update status')
+        return
+      }
+
+      const data = await res.json()
+      setSelectedRequest(data.updated)
+      setSelectedDate('')
+
+      // Refresh the requests list
+      const listRes = await fetch('/api/requests')
+      const listData = await listRes.json()
+      setRequests(listData.requests || [])
+    } catch (error) {
+      console.error('Error updating status:', error)
+      alert('Failed to update status')
+    } finally {
+      setUpdating(false)
+    }
+  }
+
+  async function handleUpdateStatus(newStatus: 'RESOLVED') {
     if (!selectedRequest) return
 
     setUpdating(true)
@@ -202,11 +247,11 @@ export default function RequestList() {
                   <div className="flex gap-3 pt-2">
                     {selectedRequest.status === 'OPEN' && (
                       <Button
-                        onClick={() => handleUpdateStatus('IN_PROGRESS')}
+                        onClick={handleProgressClick}
                         disabled={updating}
                         className="gradient-primary hover:opacity-90 transition-opacity"
                       >
-                        {updating ? 'Updating...' : 'Progress'}
+                        Progress
                       </Button>
                     )}
                     <Button
@@ -283,6 +328,52 @@ export default function RequestList() {
               )}
             </div>
           ) : null}
+        </DialogContent>
+      </Dialog>
+
+      {/* Datepicker Modal */}
+      <Dialog open={showDatePicker} onOpenChange={setShowDatePicker}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold gradient-text">Set Progress Date</DialogTitle>
+            <DialogClose onClick={() => setShowDatePicker(false)} />
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="progress-date">Expected Completion Date</Label>
+              <Input
+                id="progress-date"
+                type="date"
+                value={selectedDate}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setSelectedDate(e.target.value)
+                }
+                min={new Date().toISOString().split('T')[0]}
+                className="w-full"
+              />
+            </div>
+
+            <div className="flex gap-3 justify-end pt-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowDatePicker(false)
+                  setSelectedDate('')
+                }}
+                disabled={updating}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleConfirmProgress}
+                disabled={updating || !selectedDate}
+                className="gradient-primary hover:opacity-90 transition-opacity"
+              >
+                {updating ? 'Updating...' : 'Confirm'}
+              </Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </>
