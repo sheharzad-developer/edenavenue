@@ -16,22 +16,23 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [showForm, setShowForm] = useState(false)
 
-  // Show form after a short delay, even if session is still loading
+  // Show form immediately
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowForm(true)
-    }, 500)
-    return () => clearTimeout(timer)
+    setShowForm(true)
   }, [])
 
-  // Get callbackUrl from URL and redirect if authenticated
+  // Redirect if authenticated (only once, with a guard)
   useEffect(() => {
-    if (status === 'authenticated' && session) {
+    if (status === 'authenticated' && session && typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search)
       const callbackUrl = params.get('callbackUrl') || '/dashboard'
-      router.push(callbackUrl)
+      // Small delay to prevent rapid redirects
+      const timer = setTimeout(() => {
+        window.location.href = callbackUrl
+      }, 100)
+      return () => clearTimeout(timer)
     }
-  }, [status, session, router])
+  }, [status, session])
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
@@ -60,8 +61,8 @@ export default function LoginPage() {
       if (res?.ok) {
         // Wait a moment for session to be set
         await new Promise(resolve => setTimeout(resolve, 100))
-        router.push(callbackUrl)
-        router.refresh()
+        // Use replace to avoid adding to history
+        router.replace(callbackUrl)
       } else {
         // Show user-friendly error message
         const errorMessage =
@@ -79,17 +80,8 @@ export default function LoginPage() {
     }
   }
 
-  // Show form if authenticated check is done or timeout passed
-  if (status === 'authenticated') {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-gray-600 dark:text-gray-400">Redirecting...</div>
-      </div>
-    )
-  }
-
-  // Show loading only briefly, then show form
-  if (status === 'loading' && !showForm) {
+  // Show form immediately, don't wait for session check
+  if (!showForm) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
         <div className="text-center">
