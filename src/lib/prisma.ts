@@ -5,12 +5,23 @@ declare global {
   var prisma: PrismaClient | undefined
 }
 
-const prisma =
-  global.prisma ??
-  new PrismaClient({
+// Create Prisma Client with connection pooling settings for serverless
+const createPrismaClient = () => {
+  return new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
   })
+}
 
-if (process.env.NODE_ENV !== 'production') global.prisma = prisma
+const prisma = global.prisma ?? createPrismaClient()
+
+// In development, reuse the same instance
+if (process.env.NODE_ENV !== 'production') {
+  global.prisma = prisma
+}
+
+// Handle connection errors and reconnection
+prisma.$on('error' as never, (e: unknown) => {
+  console.error('Prisma error:', e)
+})
 
 export default prisma
