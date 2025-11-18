@@ -45,8 +45,10 @@ export default function LoginPage() {
 
   return (
     <div className="max-w-md mx-auto mt-20">
-      <div className="mt-8 text-center">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Eden Avenue Management</h2>
+      <div className="mb-8 text-center">
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          Eden Avenue Management
+        </h2>
       </div>
       <h1 className="text-2xl font-bold mb-4">Login</h1>
       <form onSubmit={handleLogin} className="space-y-4">
