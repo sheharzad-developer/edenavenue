@@ -15,48 +15,71 @@ export default function LoginPage() {
 
   // Show form immediately - no delay
   useEffect(() => {
+    console.log('=== LOGIN PAGE LOADED ===')
+    console.log('Current URL:', typeof window !== 'undefined' ? window.location.href : 'SSR')
+    console.log('Query params:', typeof window !== 'undefined' ? window.location.search : 'SSR')
     setShowForm(true)
   }, [])
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
+    console.log('=== LOGIN FORM SUBMITTED ===')
+    console.log('Email:', email)
+    console.log('Password length:', password.length)
+
     setError('')
     setLoading(true)
 
     if (!email || !password) {
+      console.log('Validation failed: Missing email or password')
       setError('Please enter both email and password')
       setLoading(false)
       return
     }
 
     try {
+      console.log('Calling signIn with credentials...')
       const res = await signIn('credentials', {
         redirect: false,
         email: email.trim(),
         password,
       })
 
-      console.log('Login response:', res) // Debug log
+      console.log('=== SIGNIN RESPONSE ===')
+      console.log('Response:', res)
+      console.log('Response OK:', res?.ok)
+      console.log('Response Error:', res?.error)
+      console.log('Response Status:', res?.status)
 
       if (res?.ok) {
-        console.log('Login successful, redirecting to dashboard')
+        console.log('✅ Login successful! Redirecting to dashboard...')
         // Always use full page reload for serverless environments
         // This ensures session cookies are properly set
         window.location.href = '/dashboard'
       } else {
+        console.log('❌ Login failed')
         // Show user-friendly error message
         const errorMessage =
           res?.error === 'CredentialsSignin'
             ? 'Invalid email or password. Please check your credentials and try again.'
             : res?.error || 'Login failed. Please try again.'
         setError(errorMessage)
-        console.error('Login failed:', res?.error, res)
+        console.error('Login failed details:', {
+          error: res?.error,
+          status: res?.status,
+          url: res?.url,
+          ok: res?.ok,
+        })
         setLoading(false) // Re-enable form on error
       }
     } catch (error) {
-      console.error('Login error:', error)
+      console.error('=== EXCEPTION IN LOGIN ===')
+      console.error('Error type:', typeof error)
+      console.error('Error:', error)
+      console.error('Error message:', error instanceof Error ? error.message : 'Unknown error')
       setError('An error occurred during login. Please try again.')
     } finally {
+      console.log('Login attempt completed, setting loading to false')
       setLoading(false)
     }
   }
