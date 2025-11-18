@@ -40,6 +40,11 @@ export default function RegisterPage() {
 
   return (
     <div className="max-w-md mx-auto mt-20">
+      <div className="mb-6">
+        <Button variant="outline" onClick={() => router.push('/auth/login')}>
+          ← Back to Login
+        </Button>
+      </div>
       <h1 className="text-2xl font-bold mb-4">Register</h1>
       <form onSubmit={handleRegister} className="space-y-4">
         <div>
