@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { signOut } from 'next-auth/react'
 import Button from '@/components/ui/Button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
@@ -22,7 +22,18 @@ export default function DashboardPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [stats, setStats] = useState<RequestStats | null>(null)
-  const [loadingStats, setLoadingStats] = useState(false)
+
+  const fetchStats = useCallback(async () => {
+    try {
+      const res = await fetch('/api/requests/stats')
+      if (res.ok) {
+        const data = await res.json()
+        setStats(data.stats)
+      }
+    } catch (error) {
+      console.error('Error fetching stats:', error)
+    }
+  }, [])
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -33,24 +44,10 @@ export default function DashboardPage() {
   useEffect(() => {
     const userRole = (session?.user as { role?: string })?.role
     if (status === 'authenticated' && ['ADMIN', 'MANAGER'].includes(userRole || '')) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchStats()
     }
-  }, [status, session])
-
-  async function fetchStats() {
-    setLoadingStats(true)
-    try {
-      const res = await fetch('/api/requests/stats')
-      if (res.ok) {
-        const data = await res.json()
-        setStats(data.stats)
-      }
-    } catch (error) {
-      console.error('Error fetching stats:', error)
-    } finally {
-      setLoadingStats(false)
-    }
-  }
+  }, [status, session, fetchStats])
 
   if (status === 'loading') {
     return (
