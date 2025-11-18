@@ -8,8 +8,8 @@ export default function RequestDetails({ id }: { id: string }) {
 
   useEffect(() => {
     fetch(`/api/requests/${id}`)
-      .then((res) => res.json())
-      .then((data) => setRequest(data.request))
+      .then(res => res.json())
+      .then(data => setRequest(data.request))
   }, [id])
 
   if (!request) return <p>Loading...</p>

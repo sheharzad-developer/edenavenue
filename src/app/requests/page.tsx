@@ -12,7 +12,7 @@ export default function RequestsPage() {
 
   const handleCancel = () => {
     setShowForm(false)
-    setRefreshKey((prev) => prev + 1)
+    setRefreshKey(prev => prev + 1)
   }
 
   if (!session) {

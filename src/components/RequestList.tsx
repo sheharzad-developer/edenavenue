@@ -9,8 +9,8 @@ export default function RequestList() {
 
   useEffect(() => {
     fetch('/api/requests')
-      .then((res) => res.json())
-      .then((data) => setRequests(data.requests || []))
+      .then(res => res.json())
+      .then(data => setRequests(data.requests || []))
   }, [])
 
   return (
@@ -26,7 +26,7 @@ export default function RequestList() {
           </tr>
         </thead>
         <tbody>
-          {requests.map((req) => (
+          {requests.map(req => (
             <tr key={req.id} className="border-t">
               <td className="border px-4 py-2">{req.title}</td>
               <td className="border px-4 py-2">{req.author?.name || req.author?.email}</td>

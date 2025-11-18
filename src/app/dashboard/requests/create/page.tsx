@@ -17,7 +17,6 @@ export default function CreateRequestPage() {
     }
   }, [status, router])
 
-
   if (status === 'loading') {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -41,9 +40,7 @@ export default function CreateRequestPage() {
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
           <CardTitle>Create Maintenance Request</CardTitle>
-          <CardDescription>
-            Submit a new maintenance request for your property
-          </CardDescription>
+          <CardDescription>Submit a new maintenance request for your property</CardDescription>
         </CardHeader>
         <CardContent>
           <RequestForm />
@@ -52,4 +49,3 @@ export default function CreateRequestPage() {
     </div>
   )
 }
-

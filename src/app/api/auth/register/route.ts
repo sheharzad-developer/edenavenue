@@ -11,6 +11,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
     }
 
+    // Validate role
+    const validRoles = ['ADMIN', 'MANAGER', 'RESIDENT', 'MAINTENANCE']
+    if (role && !validRoles.includes(role)) {
+      return NextResponse.json(
+        { error: `Invalid role. Must be one of: ${validRoles.join(', ')}` },
+        { status: 400 }
+      )
+    }
+
     const existing = await prisma.user.findUnique({ where: { email } })
     if (existing) {
       return NextResponse.json({ error: 'Email already exists' }, { status: 400 })
@@ -38,6 +47,26 @@ export async function POST(req: Request) {
     return NextResponse.json({ user }, { status: 201 })
   } catch (error) {
     console.error('Error creating user:', error)
-    return NextResponse.json({ error: 'Failed to create user' }, { status: 500 })
+    let errorMessage = 'Failed to create user'
+
+    if (error instanceof Error) {
+      errorMessage = error.message
+      // Check for common Prisma errors
+      if (
+        error.message.includes('fetch failed') ||
+        error.message.includes('Cannot fetch data') ||
+        error.message.includes("Can't reach database server") ||
+        error.message.includes('P1001')
+      ) {
+        errorMessage =
+          'Database connection failed. Please check your DATABASE_URL in .env file and ensure your database server is running. See DATABASE_SETUP.md for help.'
+      } else if (error.message.includes('Unique constraint') || error.message.includes('P2002')) {
+        errorMessage = 'Email already exists'
+      } else if (error.message.includes('Invalid value') || error.message.includes('P2003')) {
+        errorMessage = 'Invalid role value. Must be ADMIN, MANAGER, RESIDENT, or MAINTENANCE'
+      }
+    }
+
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }

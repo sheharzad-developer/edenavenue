@@ -14,12 +14,32 @@ export const authOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials) return null
-        const user = await prisma.user.findUnique({ where: { email: credentials.email } })
-        if (!user || !user.password) return null
-        const valid = await bcrypt.compare(credentials.password, user.password)
-        if (!valid) return null
-        return { id: user.id, email: user.email, name: user.name, role: user.role }
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error('Email and password are required')
+        }
+
+        try {
+          const user = await prisma.user.findUnique({ where: { email: credentials.email } })
+
+          if (!user) {
+            throw new Error('Invalid email or password')
+          }
+
+          if (!user.password) {
+            throw new Error('User account has no password set')
+          }
+
+          const valid = await bcrypt.compare(credentials.password, user.password)
+
+          if (!valid) {
+            throw new Error('Invalid email or password')
+          }
+
+          return { id: user.id, email: user.email, name: user.name, role: user.role }
+        } catch (error) {
+          console.error('Auth error:', error)
+          throw error
+        }
       },
     }),
   ],

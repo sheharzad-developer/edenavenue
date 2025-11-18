@@ -39,9 +39,7 @@ export default function DashboardRequestsPage() {
             View and manage maintenance requests
           </p>
         </div>
-        <Button onClick={() => router.push('/dashboard/requests/create')}>
-          New Request
-        </Button>
+        <Button onClick={() => router.push('/dashboard/requests/create')}>New Request</Button>
       </div>
 
       <RequestList />

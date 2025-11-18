@@ -48,19 +48,19 @@ export default function RequestForm({ onCancel }: RequestFormProps) {
     <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
       <div>
         <Label>Title</Label>
-        <Input value={title} onChange={(e) => setTitle(e.target.value)} required />
+        <Input value={title} onChange={e => setTitle(e.target.value)} required />
       </div>
 
       <div>
         <Label>Description</Label>
-        <Textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
+        <Textarea value={description} onChange={e => setDescription(e.target.value)} required />
       </div>
 
       <div>
         <Label>Priority</Label>
         <select
           value={priority}
-          onChange={(e) => setPriority(e.target.value)}
+          onChange={e => setPriority(e.target.value)}
           className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:ring-offset-gray-900 dark:focus-visible:ring-blue-400"
         >
           <option value="LOW">Low</option>

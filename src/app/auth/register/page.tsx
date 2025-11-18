@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import bcrypt from 'bcryptjs'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import Label from '@/components/ui/Label'
@@ -18,16 +17,19 @@ export default function RegisterPage() {
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-    const hashedPassword = await bcrypt.hash(password, 10)
     try {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password: hashedPassword, name, role }),
+        body: JSON.stringify({ email, password, name, role }),
       })
       const data = await res.json()
-      if (res.ok) router.push('/auth/login')
-      else alert(data.error || 'Registration failed')
+      if (res.ok) {
+        router.push('/auth/login')
+      } else {
+        alert(data.error || 'Registration failed')
+        console.error('Registration error:', data)
+      }
     } catch (err) {
       console.error(err)
       alert('Registration error')
