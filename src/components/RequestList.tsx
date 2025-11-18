@@ -42,30 +42,30 @@ export default function RequestList() {
   function getStatusColor(status: string) {
     switch (status) {
       case 'OPEN':
-        return 'bg-blue-500'
+        return 'bg-blue-500 text-white'
       case 'IN_PROGRESS':
-        return 'bg-yellow-500'
+        return 'bg-yellow-500 text-white'
       case 'RESOLVED':
-        return 'bg-green-500'
+        return 'bg-green-500 text-white'
       case 'CLOSED':
-        return 'bg-gray-500'
+        return 'bg-gray-500 text-white'
       default:
-        return 'bg-gray-500'
+        return 'bg-gray-500 text-white'
     }
   }
 
   function getPriorityColor(priority: string) {
     switch (priority) {
       case 'URGENT':
-        return 'bg-red-500'
+        return 'bg-red-500 text-white'
       case 'HIGH':
-        return 'bg-orange-500'
+        return 'bg-orange-500 text-white'
       case 'MEDIUM':
-        return 'bg-yellow-500'
+        return 'bg-yellow-500 text-white'
       case 'LOW':
-        return 'bg-green-500'
+        return 'bg-green-500 text-white'
       default:
-        return 'bg-gray-500'
+        return 'bg-gray-500 text-white'
     }
   }
 
@@ -95,10 +95,18 @@ export default function RequestList() {
                   {req.author?.name || req.author?.email}
                 </td>
                 <td className="border border-border px-4 py-3">
-                  <Badge className={getStatusColor(req.status)}>{req.status}</Badge>
+                  <Badge
+                    className={`${getStatusColor(req.status)} px-3 py-1.5 text-sm font-semibold`}
+                  >
+                    {req.status}
+                  </Badge>
                 </td>
                 <td className="border border-border px-4 py-3">
-                  <Badge className={getPriorityColor(req.priority)}>{req.priority}</Badge>
+                  <Badge
+                    className={`${getPriorityColor(req.priority)} px-3 py-1.5 text-sm font-semibold`}
+                  >
+                    {req.priority}
+                  </Badge>
                 </td>
                 <td className="border border-border px-4 py-3">
                   <Button
@@ -134,13 +142,17 @@ export default function RequestList() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm font-semibold text-muted-foreground mb-1">Status</p>
-                  <Badge className={getStatusColor(selectedRequest.status)}>
+                  <Badge
+                    className={`${getStatusColor(selectedRequest.status)} px-3 py-1.5 text-sm font-semibold`}
+                  >
                     {selectedRequest.status}
                   </Badge>
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-muted-foreground mb-1">Priority</p>
-                  <Badge className={getPriorityColor(selectedRequest.priority)}>
+                  <Badge
+                    className={`${getPriorityColor(selectedRequest.priority)} px-3 py-1.5 text-sm font-semibold`}
+                  >
                     {selectedRequest.priority}
                   </Badge>
                 </div>
