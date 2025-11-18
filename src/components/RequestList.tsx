@@ -19,6 +19,7 @@ export default function RequestList() {
         <thead>
           <tr>
             <th className="border px-4 py-2">Title</th>
+            <th className="border px-4 py-2">House/Unit</th>
             <th className="border px-4 py-2">Author</th>
             <th className="border px-4 py-2">Status</th>
             <th className="border px-4 py-2">Priority</th>
@@ -29,6 +30,7 @@ export default function RequestList() {
           {requests.map(req => (
             <tr key={req.id} className="border-t">
               <td className="border px-4 py-2">{req.title}</td>
+              <td className="border px-4 py-2">{req.houseNumber || '-'}</td>
               <td className="border px-4 py-2">{req.author?.name || req.author?.email}</td>
               <td className="border px-4 py-2">{req.status}</td>
               <td className="border px-4 py-2">{req.priority}</td>

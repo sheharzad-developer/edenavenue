@@ -52,7 +52,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json()
-    const { title, description, priority } = body
+    const { title, description, houseNumber, priority } = body
 
     if (!title || !description) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
@@ -62,6 +62,7 @@ export async function POST(req: Request) {
       data: {
         title,
         description,
+        houseNumber: houseNumber || null,
         authorId: session.user.id,
         priority: priority || 'MEDIUM',
       },

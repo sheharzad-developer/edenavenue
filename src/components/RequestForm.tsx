@@ -15,6 +15,7 @@ export default function RequestForm({ onCancel }: RequestFormProps) {
   const router = useRouter()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
+  const [houseNumber, setHouseNumber] = useState('')
   const [priority, setPriority] = useState('MEDIUM')
 
   async function handleSubmit(e: React.FormEvent) {
@@ -23,7 +24,7 @@ export default function RequestForm({ onCancel }: RequestFormProps) {
     const res = await fetch('/api/requests', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, description, priority }),
+      body: JSON.stringify({ title, description, houseNumber, priority }),
     })
 
     if (!res.ok) {
@@ -34,6 +35,7 @@ export default function RequestForm({ onCancel }: RequestFormProps) {
 
     setTitle('')
     setDescription('')
+    setHouseNumber('')
     setPriority('MEDIUM')
 
     if (onCancel) {
@@ -54,6 +56,15 @@ export default function RequestForm({ onCancel }: RequestFormProps) {
       <div>
         <Label>Description</Label>
         <Textarea value={description} onChange={e => setDescription(e.target.value)} required />
+      </div>
+
+      <div>
+        <Label>House/Unit Number</Label>
+        <Input
+          value={houseNumber}
+          onChange={e => setHouseNumber(e.target.value)}
+          placeholder="e.g., 101, Unit A, etc."
+        />
       </div>
 
       <div>

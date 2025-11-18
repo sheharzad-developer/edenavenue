@@ -17,6 +17,7 @@ export default function RequestDetails({ id }: { id: string }) {
   return (
     <div className="space-y-2">
       <h1 className="text-xl font-bold">{request.title}</h1>
+      {request.houseNumber && <p>House/Unit: {request.houseNumber}</p>}
       <p>{request.description}</p>
       <p>Status: {request.status}</p>
       <p>Priority: {request.priority}</p>

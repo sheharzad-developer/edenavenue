@@ -60,6 +60,7 @@ model MaintenanceRequest {
   id          String   @id @default(cuid())
   title       String
   description String
+  houseNumber String?
   status      RequestStatus @default(OPEN)
   priority    Priority      @default(MEDIUM)
   author      User?         @relation("requestAuthor", fields:[authorId], references:[id])
