@@ -30,6 +30,11 @@ export default function DashboardRequestsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <div className="mb-6">
+        <Button variant="outline" onClick={() => router.push('/dashboard')} className="mb-4">
+          ← Back to Dashboard
+        </Button>
+      </div>
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
