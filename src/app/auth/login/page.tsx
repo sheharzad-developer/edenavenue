@@ -1,14 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { signIn, getSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { signIn } from 'next-auth/react'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import Label from '@/components/ui/Label'
 
 export default function LoginPage() {
-  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -48,22 +46,9 @@ export default function LoginPage() {
 
       if (res?.ok) {
         console.log('Login successful, redirecting to:', callbackUrl)
-        // Wait for session to be established
-        await new Promise(resolve => setTimeout(resolve, 300))
-
-        // Verify session was created
-        const session = await getSession()
-        console.log('Session after login:', session)
-
-        if (session) {
-          // Use router.push for client-side navigation (faster)
-          router.push(callbackUrl)
-          router.refresh() // Refresh to ensure session is available
-        } else {
-          // Fallback to full page reload if session not ready
-          console.warn('Session not ready, using full page reload')
-          window.location.href = callbackUrl
-        }
+        // Always use full page reload for serverless environments
+        // This ensures session cookies are properly set
+        window.location.href = callbackUrl
       } else {
         // Show user-friendly error message
         const errorMessage =
@@ -72,6 +57,7 @@ export default function LoginPage() {
             : res?.error || 'Login failed. Please try again.'
         setError(errorMessage)
         console.error('Login failed:', res?.error, res)
+        setLoading(false) // Re-enable form on error
       }
     } catch (error) {
       console.error('Login error:', error)
