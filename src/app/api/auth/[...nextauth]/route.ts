@@ -76,6 +76,19 @@ export const authOptions = {
   pages: {
     signIn: '/auth/login',
   },
+  // Explicitly set the base URL for Vercel
+  useSecureCookies: process.env.NEXTAUTH_URL?.startsWith('https://') ?? true,
+  cookies: {
+    sessionToken: {
+      name: `${process.env.NEXTAUTH_URL?.startsWith('https://') ? '__Secure-' : ''}next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NEXTAUTH_URL?.startsWith('https://') ?? true,
+      },
+    },
+  },
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
