@@ -16,7 +16,11 @@ import Label from '@/components/ui/Label'
 import Textarea from '@/components/ui/Textarea'
 import Select from '@/components/ui/Select'
 
-export default function RequestList() {
+interface RequestListProps {
+  onRefresh?: () => void
+}
+
+export default function RequestList({ onRefresh }: RequestListProps) {
   const { data: session } = useSession()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [requests, setRequests] = useState<any[]>([])
@@ -36,11 +40,24 @@ export default function RequestList() {
   const [statusFilter, setStatusFilter] = useState<string>('')
   const [priorityFilter, setPriorityFilter] = useState<string>('')
 
-  useEffect(() => {
+  const fetchRequests = () => {
     fetch('/api/requests')
       .then(res => res.json())
       .then(data => setRequests(data.requests || []))
+  }
+
+  useEffect(() => {
+    fetchRequests()
   }, [])
+
+  // Expose refresh function to parent
+  useEffect(() => {
+    if (onRefresh) {
+      // Store refresh function in a way parent can call it
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(window as any).refreshRequestList = fetchRequests
+    }
+  }, [onRefresh])
 
   useEffect(() => {
     // Fetch staff for assignment dropdown

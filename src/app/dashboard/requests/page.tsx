@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import RequestList from '@/components/RequestList'
 import Button from '@/components/ui/Button'
+import NotificationListener from '@/components/NotificationListener'
 
 export default function DashboardRequestsPage() {
   const { status } = useSession()
@@ -30,6 +31,7 @@ export default function DashboardRequestsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <NotificationListener />
       <div className="mb-6">
         <Button variant="outline" onClick={() => router.push('/dashboard')} className="mb-4">
           ← Back to Dashboard
@@ -47,7 +49,7 @@ export default function DashboardRequestsPage() {
         <Button onClick={() => router.push('/dashboard/requests/create')}>New Request</Button>
       </div>
 
-      <RequestList />
+      <RequestList onRefresh={() => {}} />
     </div>
   )
 }
