@@ -15,6 +15,7 @@ import Input from '@/components/ui/Input'
 import Label from '@/components/ui/Label'
 import Textarea from '@/components/ui/Textarea'
 import Select from '@/components/ui/Select'
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/Table'
 
 interface RequestListProps {
   onRefresh?: () => void
@@ -340,57 +341,49 @@ export default function RequestList({ onRefresh }: RequestListProps) {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="table-auto w-full border border-border rounded-lg">
-          <thead>
-            <tr className="bg-muted">
-              <th className="border border-border px-4 py-3 text-left font-semibold">Title</th>
-              <th className="border border-border px-4 py-3 text-left font-semibold">House/Unit</th>
-              <th className="border border-border px-4 py-3 text-left font-semibold">Author</th>
-              <th className="border border-border px-4 py-3 text-left font-semibold">Status</th>
-              <th className="border border-border px-4 py-3 text-left font-semibold">Priority</th>
-              <th className="border border-border px-4 py-3 text-left font-semibold">Created</th>
-              <th className="border border-border px-4 py-3 text-left font-semibold">Updated</th>
-              <th className="border border-border px-4 py-3 text-left font-semibold">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Title</TableHead>
+              <TableHead>House/Unit</TableHead>
+              <TableHead>Author</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Priority</TableHead>
+              <TableHead>Created</TableHead>
+              <TableHead>Updated</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {filteredRequests.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={8}
-                  className="border border-border px-4 py-8 text-center text-muted-foreground"
-                >
+              <TableRow>
+                <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
                   {requests.length === 0
                     ? 'No requests found'
                     : 'No requests match your search criteria'}
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ) : (
               filteredRequests.map(req => (
-                <tr
-                  key={req.id}
-                  className="border-t border-border hover:bg-muted/50 transition-colors"
-                >
-                  <td className="border border-border px-4 py-3">{req.title}</td>
-                  <td className="border border-border px-4 py-3">{req.houseNumber || '-'}</td>
-                  <td className="border border-border px-4 py-3">
-                    {req.author?.name || req.author?.email}
-                  </td>
-                  <td className="border border-border px-4 py-3">
+                <TableRow key={req.id}>
+                  <TableCell className="font-medium">{req.title}</TableCell>
+                  <TableCell>{req.houseNumber || '-'}</TableCell>
+                  <TableCell>{req.author?.name || req.author?.email}</TableCell>
+                  <TableCell>
                     <Badge
                       className={`${getStatusColor(req.status)} px-3 py-1.5 text-sm font-semibold`}
                     >
                       {req.status}
                     </Badge>
-                  </td>
-                  <td className="border border-border px-4 py-3">
+                  </TableCell>
+                  <TableCell>
                     <Badge
                       className={`${getPriorityColor(req.priority)} px-3 py-1.5 text-sm font-semibold`}
                     >
                       {req.priority}
                     </Badge>
-                  </td>
-                  <td className="border border-border px-4 py-3 text-sm text-muted-foreground">
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
                     {new Date(req.createdAt).toLocaleDateString()}
                     <br />
                     <span className="text-xs">
@@ -399,8 +392,8 @@ export default function RequestList({ onRefresh }: RequestListProps) {
                         minute: '2-digit',
                       })}
                     </span>
-                  </td>
-                  <td className="border border-border px-4 py-3 text-sm text-muted-foreground">
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
                     {new Date(req.updatedAt).toLocaleDateString()}
                     <br />
                     <span className="text-xs">
@@ -409,8 +402,8 @@ export default function RequestList({ onRefresh }: RequestListProps) {
                         minute: '2-digit',
                       })}
                     </span>
-                  </td>
-                  <td className="border border-border px-4 py-3">
+                  </TableCell>
+                  <TableCell>
                     <Button
                       variant="outline"
                       size="sm"
@@ -419,12 +412,12 @@ export default function RequestList({ onRefresh }: RequestListProps) {
                     >
                       View
                     </Button>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))
             )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>

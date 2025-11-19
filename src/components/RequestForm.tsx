@@ -6,6 +6,7 @@ import Input from '@/components/ui/Input'
 import Textarea from '@/components/ui/Textarea'
 import Button from '@/components/ui/Button'
 import Label from '@/components/ui/Label'
+import Select from '@/components/ui/Select'
 
 interface RequestFormProps {
   onCancel?: () => void
@@ -50,18 +51,24 @@ export default function RequestForm({ onCancel }: RequestFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
       <div>
-        <Label>Title</Label>
-        <Input value={title} onChange={e => setTitle(e.target.value)} required />
+        <Label htmlFor="title">Title</Label>
+        <Input id="title" value={title} onChange={e => setTitle(e.target.value)} required />
       </div>
 
       <div>
-        <Label>Description</Label>
-        <Textarea value={description} onChange={e => setDescription(e.target.value)} required />
+        <Label htmlFor="description">Description</Label>
+        <Textarea
+          id="description"
+          value={description}
+          onChange={e => setDescription(e.target.value)}
+          required
+        />
       </div>
 
       <div>
-        <Label>House/Unit Number</Label>
+        <Label htmlFor="houseNumber">House/Unit Number</Label>
         <Input
+          id="houseNumber"
           value={houseNumber}
           onChange={e => setHouseNumber(e.target.value)}
           placeholder="e.g., 101, Unit A, etc."
@@ -69,17 +76,13 @@ export default function RequestForm({ onCancel }: RequestFormProps) {
       </div>
 
       <div>
-        <Label>Priority</Label>
-        <select
-          value={priority}
-          onChange={e => setPriority(e.target.value)}
-          className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:ring-offset-gray-900 dark:focus-visible:ring-blue-400"
-        >
+        <Label htmlFor="priority">Priority</Label>
+        <Select id="priority" value={priority} onChange={e => setPriority(e.target.value)}>
           <option value="LOW">Low</option>
           <option value="MEDIUM">Medium</option>
           <option value="HIGH">High</option>
           <option value="URGENT">Urgent</option>
-        </select>
+        </Select>
       </div>
 
       <div className="flex gap-3">
