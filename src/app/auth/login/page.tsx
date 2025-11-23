@@ -148,6 +148,11 @@ export default function LoginPage() {
             >
               {loading ? 'Logging in...' : 'Login'}
             </Button>
+            <div className="text-xs text-muted-foreground text-center mt-2">
+              Demo admin credentials:&nbsp;
+              <span className="font-mono">admin@example.com</span>&nbsp;/&nbsp;
+              <span className="font-mono">12345</span>
+            </div>
             <div className="text-center text-sm text-muted-foreground mt-4">
               Don&apos;t have an account?{' '}
               <a
