@@ -125,6 +125,35 @@ const DialogClose = ({
   </button>
 )
 
+const DialogTrigger = React.forwardRef<
+  HTMLButtonElement,
+  React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }
+>(({ asChild, children, ...props }, ref) => {
+  if (asChild && React.isValidElement(children)) {
+    // Handle ref assignment safely - refs are only used for DOM manipulation, not during render
+    // This pattern is standard in UI component libraries like Radix UI
+    const handleRef = (node: HTMLElement | null) => {
+      if (typeof ref === 'function') {
+        ref(node as HTMLButtonElement | null)
+      } else if (ref && 'current' in ref) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ;(ref as any).current = node as HTMLButtonElement | null
+      }
+    }
+    // eslint-disable-next-line react-hooks/refs
+    return React.cloneElement(children, {
+      ...props,
+      ref: handleRef,
+    } as React.ComponentPropsWithoutRef<'button'>)
+  }
+  return (
+    <button ref={ref} {...props}>
+      {children}
+    </button>
+  )
+})
+DialogTrigger.displayName = 'DialogTrigger'
+
 export {
   Dialog,
   DialogContent,
@@ -133,4 +162,5 @@ export {
   DialogTitle,
   DialogDescription,
   DialogClose,
+  DialogTrigger,
 }

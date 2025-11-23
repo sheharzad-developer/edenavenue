@@ -1,0 +1,49 @@
+{
+  "name": "Eden Avenue Management",
+  "short_name": "Eden Avenue",
+  "description": "Property management app for residents - Submit maintenance requests, view announcements, and manage your property",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Submit Request",
+      "short_name": "New Request",
+      "description": "Submit a new maintenance request",
+      "url": "/dashboard/requests/create",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "View Requests",
+      "short_name": "Requests",
+      "description": "View your maintenance requests",
+      "url": "/dashboard/requests",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Announcements",
+      "short_name": "Notices",
+      "description": "View community announcements",
+      "url": "/notices",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

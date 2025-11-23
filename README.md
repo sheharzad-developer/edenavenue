@@ -1,38 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Eden Avenue Management
 
-## Getting Started
+Property management system with web admin panel, PWA for residents, and native mobile app.
 
-First, run the development server:
+## 🚀 Quick Start
 
 ```bash
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your database URL and secrets
+
+# Run database migrations
+npx prisma migrate dev
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📚 Documentation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+All documentation is in the `docs/` folder:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **`docs/DEPLOYMENT.md`** - Production deployment guide (NGINX, SSL, Cloudflare, PM2)
+- **`docs/PWA_SETUP.md`** - Progressive Web App setup and configuration
+- **`mobile/docs/`** - Mobile app documentation
 
-## Learn More
+## 🏗️ Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+eden-avenue/
+├── src/              # Next.js application
+├── prisma/           # Database schema and migrations
+├── public/           # Static assets (PWA files, icons)
+├── docs/             # Documentation
+└── mobile/           # React Native mobile app
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📱 Features
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Web Admin Panel
 
-## Deploy on Vercel
+- ✅ Dashboard with analytics
+- ✅ Resident management
+- ✅ Staff management
+- ✅ Maintenance requests
+- ✅ Notices/Announcements
+- ✅ Property/Unit management
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### PWA (Resident App Lite)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- ✅ Install to home screen
+- ✅ Offline support
+- ✅ Push notifications
+- ✅ Mobile-optimized UI
 
-# edenavenue
+### Mobile App (React Native)
+
+- ✅ Native iOS/Android app
+- ✅ Camera integration
+- ✅ Real-time notifications
+- ✅ Chat with management
+- ✅ Payments integration
+- ✅ Resident verification
+
+## 🔧 Tech Stack
+
+- **Frontend:** Next.js 16, React 19, Tailwind CSS
+- **Backend:** Next.js API Routes, Prisma ORM
+- **Database:** PostgreSQL
+- **Auth:** NextAuth.js
+- **Mobile:** React Native + Expo
+- **PWA:** Service Worker, Web Push API
+
+## 📦 Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run typecheck` - TypeScript type checking
+
+## 🚀 Deployment
+
+See `docs/DEPLOYMENT.md` for detailed deployment instructions including:
+
+- Server setup
+- NGINX configuration
+- SSL certificate setup
+- Cloudflare configuration
+- PM2 process management
+
+## 📝 License
+
+Private project

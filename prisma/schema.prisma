@@ -21,6 +21,7 @@ model User {
   tickets         MaintenanceRequest[]  @relation("requestAuthor")
   assignedRequests MaintenanceRequest[] @relation("requestAssignee")
   comments        Comment[]
+  notices         Notice[]              @relation("noticeAuthor")
   accounts        Account[]
   sessions        Session[]
 }
@@ -80,6 +81,35 @@ model Comment {
   request   MaintenanceRequest @relation(fields:[requestId], references:[id])
   requestId String
   createdAt DateTime @default(now())
+}
+
+model Notice {
+  id          String      @id @default(cuid())
+  title       String
+  content     String      @db.Text
+  type        NoticeType  @default(GENERAL)
+  priority    NoticePriority @default(NORMAL)
+  author      User        @relation("noticeAuthor", fields:[authorId], references:[id])
+  authorId    String
+  isPublished Boolean     @default(false)
+  expiresAt   DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+enum NoticeType {
+  GENERAL
+  MAINTENANCE
+  EMERGENCY
+  EVENT
+  BILLING
+}
+
+enum NoticePriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
 }
 
 enum Role {

@@ -102,6 +102,32 @@
     @apply bg-background text-foreground;
     @apply transition-colors duration-200;
   }
+
+  /* PWA safe area for mobile devices */
+  @supports (padding: max(0px)) {
+    body {
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+    }
+  }
+
+  /* Prevent pull-to-refresh on mobile */
+  body {
+    overscroll-behavior-y: contain;
+  }
+
+  /* Mobile navigation safe area */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Add bottom padding to main content when mobile nav is visible */
+  @media (max-width: 768px) {
+    main,
+    .container {
+      padding-bottom: 4.5rem;
+    }
+  }
 }
 
 @layer utilities {

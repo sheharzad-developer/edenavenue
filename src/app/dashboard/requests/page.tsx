@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 import RequestList from '@/components/RequestList'
 import Button from '@/components/ui/Button'
 import NotificationListener from '@/components/NotificationListener'
+import MobileNav from '@/components/MobileNav'
 
 export default function DashboardRequestsPage() {
   const { status } = useSession()
@@ -50,6 +51,7 @@ export default function DashboardRequestsPage() {
       </div>
 
       <RequestList onRefresh={() => {}} />
+      <MobileNav />
     </div>
   )
 }
