@@ -127,11 +127,6 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
       path: '/settings',
       show: ['ADMIN', 'MANAGER'].includes(userRole),
     },
-    {
-      id: 'help',
-      label: 'Get Technical Help',
-      icon: HelpCircle,
-    },
   ]
 
   const filteredNavItems = navItems.filter(item => {

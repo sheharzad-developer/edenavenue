@@ -36,6 +36,7 @@ export default function PropertiesPage() {
   const [showForm, setShowForm] = useState(false)
   const [formData, setFormData] = useState({ name: '', address: '' })
   const [submitting, setSubmitting] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -111,8 +112,8 @@ export default function PropertiesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      <Sidebar isOpen={false} onClose={() => {}} />
-      <TopBar onMenuClick={() => {}} />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <TopBar onMenuClick={() => setSidebarOpen(prev => !prev)} />
       <main className="md:ml-64 mt-16 p-4 md:p-8">
         <div className="mx-auto max-w-7xl space-y-8">
           {/* Page header */}
@@ -368,8 +369,8 @@ export default function PropertiesPage() {
                                 occupancyRate > 89
                                   ? 'bg-emerald-500'
                                   : occupancyRate > 60
-                                  ? 'bg-sky-500'
-                                  : 'bg-amber-500'
+                                    ? 'bg-sky-500'
+                                    : 'bg-amber-500'
                               }`}
                               style={{
                                 width: totalUnits === 0 ? '0%' : `${occupancyRate}%`,
@@ -389,7 +390,10 @@ export default function PropertiesPage() {
                           </span>
                           <span className="inline-flex items-center gap-1 text-sky-600 group-hover:text-sky-700 dark:text-sky-400">
                             View details
-                            <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
+                            <span
+                              aria-hidden="true"
+                              className="transition-transform group-hover:translate-x-0.5"
+                            >
                               →
                             </span>
                           </span>
