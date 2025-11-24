@@ -1,4 +1,9 @@
 // Push Notification Service for PWA
+// Default public VAPID key for development.
+// For production, override this with NEXT_PUBLIC_VAPID_PUBLIC_KEY in your environment.
+const DEFAULT_VAPID_PUBLIC_KEY =
+  'BCRwXZkLl_ezT1Ev2W9s_WDbEfb-8J_QN89zyZI7qrKfmvLJNZ1WRMhDe_Qv2KzxbD1z3KiDl9o2WO3yFd5mCws'
+
 export class PushNotificationService {
   private registration: ServiceWorkerRegistration | null = null
 
@@ -47,12 +52,23 @@ export class PushNotificationService {
       return null
     }
 
+    const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || DEFAULT_VAPID_PUBLIC_KEY
+
+    // If the VAPID key is not configured or looks invalid, avoid calling subscribe
+    // and surface a clear message instead of a cryptic browser error.
+    if (!vapidPublicKey || vapidPublicKey.trim().length < 30) {
+      console.error(
+        'Push notifications: NEXT_PUBLIC_VAPID_PUBLIC_KEY is missing or invalid. ' +
+          'Generate a VAPID key pair (e.g. with "npx web-push generate-vapid-keys") ' +
+          'and set NEXT_PUBLIC_VAPID_PUBLIC_KEY in your environment.'
+      )
+      return null
+    }
+
     try {
       const subscription = await this.registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: this.urlBase64ToUint8Array(
-          process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || ''
-        ),
+        applicationServerKey: this.urlBase64ToUint8Array(vapidPublicKey),
       })
 
       // Send subscription to server
@@ -107,6 +123,7 @@ export class PushNotificationService {
     }
   }
 
+  // Convert a URL-safe base64 string to an ArrayBuffer for PushManager.subscribe
   private urlBase64ToUint8Array(base64String: string): ArrayBuffer {
     const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
     const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')

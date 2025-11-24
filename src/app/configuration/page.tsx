@@ -184,7 +184,10 @@ export default function ConfigurationPage() {
                         <span>Click to open configuration</span>
                         <span className="inline-flex items-center gap-1 text-sky-600 group-hover:text-sky-700">
                           Configure
-                          <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
+                          <span
+                            aria-hidden="true"
+                            className="transition-transform group-hover:translate-x-0.5"
+                          >
                             →
                           </span>
                         </span>

@@ -361,7 +361,9 @@ export default function ResidentsPage() {
                           >
                             <option value="">No unit assigned</option>
                             {units
-                              .filter(unit => !unit.id || !residents.find(r => r.unit?.id === unit.id))
+                              .filter(
+                                unit => !unit.id || !residents.find(r => r.unit?.id === unit.id)
+                              )
                               .map(unit => (
                                 <option key={unit.id} value={unit.id}>
                                   {unit.name} - {unit.property?.name || 'Unknown'}
@@ -475,9 +477,7 @@ export default function ResidentsPage() {
                   <div className="mb-4">
                     <Users className="mx-auto h-12 w-12 text-gray-300" />
                   </div>
-                  <h3 className="mb-2 text-lg font-semibold text-gray-900">
-                    No residents found
-                  </h3>
+                  <h3 className="mb-2 text-lg font-semibold text-gray-900">No residents found</h3>
                   <p className="mb-6 text-sm text-gray-500">
                     Get started by adding residents or generate sample data to explore the
                     directory.
