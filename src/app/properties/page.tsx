@@ -3,7 +3,10 @@
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { Home, MapPin, Users } from 'lucide-react'
+import { Building2, MapPin, PlusCircle, Home, Users } from 'lucide-react'
+import Sidebar from '@/components/Sidebar'
+import TopBar from '@/components/TopBar'
+import MobileNav from '@/components/MobileNav'
 import Button from '@/components/ui/Button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
 import Input from '@/components/ui/Input'
@@ -88,8 +91,13 @@ export default function PropertiesPage() {
 
   if (status === 'loading' || loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-gray-600 dark:text-gray-400">Loading...</div>
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-950">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-[#1e3a5f] dark:text-gray-100 mb-2">
+            Eden Avenue Properties
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400">Preparing your portfolio...</p>
+        </div>
       </div>
     )
   }
@@ -101,240 +109,301 @@ export default function PropertiesPage() {
   const userRole = (session?.user as { role?: string })?.role || 'Unknown'
   const canManage = ['ADMIN', 'MANAGER'].includes(userRole)
 
-  if (!canManage) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="rounded-md bg-red-50 p-4 text-red-800 dark:bg-red-900/20 dark:text-red-200">
-          You don&apos;t have permission to manage properties.
-        </div>
-      </div>
-    )
-  }
-
-  const totalProperties = properties.length
-  const totalUnits = properties.reduce((sum, property) => sum + property.units.length, 0)
-  const occupiedUnits = properties.reduce(
-    (sum, property) => sum + property.units.filter(u => u.isOccupied).length,
-    0
-  )
-  const occupancyRate = totalUnits ? Math.round((occupiedUnits / totalUnits) * 100) : 0
-
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-8 dark:bg-gray-950">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-6">
-          <Button
-            variant="outline"
-            onClick={() => router.push('/dashboard')}
-            className="mb-4"
-          >
-            ← Back to Dashboard
-          </Button>
-        </div>
-
-        <div className="mb-8 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">
-              Portfolio Overview
-            </p>
-            <h1 className="mt-2 text-3xl font-bold gradient-text">Properties</h1>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              Manage your buildings, units, and occupancy in one beautiful view.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-4 md:flex-row md:items-center">
-            <div className="rounded-xl bg-white/80 px-5 py-4 text-sm shadow-sm ring-1 ring-gray-200 backdrop-blur dark:bg-gray-900/80 dark:ring-gray-800">
-              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                Occupancy
-              </p>
-              <p className="mt-1 text-2xl font-semibold text-gray-900 dark:text-gray-50">
-                {occupancyRate}%
-              </p>
-              <div className="mt-2 h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800">
-                <div
-                  className="h-1.5 rounded-full bg-gradient-to-r from-emerald-500 via-blue-500 to-indigo-500"
-                  style={{ width: `${occupancyRate}%` }}
-                />
-              </div>
-              <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                {occupiedUnits} of {totalUnits || 0} units occupied across {totalProperties}{' '}
-                {totalProperties === 1 ? 'property' : 'properties'}.
-              </p>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      <Sidebar isOpen={false} onClose={() => {}} />
+      <TopBar onMenuClick={() => {}} />
+      <main className="md:ml-64 mt-16 p-4 md:p-8">
+        <div className="mx-auto max-w-7xl space-y-8">
+          {/* Page header */}
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#1e3a5f] via-sky-700 to-emerald-600 p-6 md:p-8 text-white shadow-lg">
+            <div className="absolute inset-y-0 right-0 opacity-20">
+              <Building2 className="h-full w-40 md:w-56" />
             </div>
-
-            <Button
-              onClick={() => setShowForm(!showForm)}
-              className="gradient-primary shadow-glow text-white"
-            >
-              {showForm ? 'Cancel' : 'Add Property'}
-            </Button>
-          </div>
-        </div>
-
-        {showForm && (
-          <Card className="mb-8 gradient-card border border-blue-100/60 shadow-sm dark:border-blue-900/40">
-            <CardHeader>
-              <CardTitle className="gradient-text text-xl">Add New Property</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form
-                onSubmit={handleSubmit}
-                className="grid gap-6 md:grid-cols-2 md:items-end"
-              >
-                <div className="space-y-2">
-                  <Label>Property Name</Label>
-                  <Input
-                    value={formData.name}
-                    onChange={e => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="e.g., Eden Avenue Apartments"
-                    required
-                    disabled={submitting}
-                  />
+            <div className="relative z-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium backdrop-blur">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                  Portfolio Overview
                 </div>
-                <div className="space-y-2 md:col-span-1">
-                  <Label>Address</Label>
-                  <Input
-                    value={formData.address}
-                    onChange={e => setFormData({ ...formData, address: e.target.value })}
-                    placeholder="e.g., 123 Main St, City, State 12345"
-                    required
-                    disabled={submitting}
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <Button
-                    type="submit"
-                    disabled={submitting}
-                    className="gradient-primary shadow-glow text-white"
-                  >
-                    {submitting ? 'Creating...' : 'Create Property'}
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
-        )}
-
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {properties.length === 0 ? (
-            <Card className="col-span-full gradient-card border border-dashed border-blue-200/70 text-center dark:border-blue-900/50">
-              <CardContent className="py-12">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-blue-600 shadow-glow dark:bg-blue-900/30 dark:text-blue-300">
-                  <Home className="h-8 w-8" />
-                </div>
-                <h2 className="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-50">
-                  No properties yet
-                </h2>
-                <p className="mx-auto max-w-md text-sm text-gray-600 dark:text-gray-400">
-                  Start by adding your first property to unlock a complete, visual overview of your
-                  portfolio.
+                <h1 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight">
+                  Properties & Units
+                </h1>
+                <p className="mt-2 max-w-xl text-sm md:text-base text-sky-100">
+                  A high-level view of all managed properties, occupancy and growth. Craft a
+                  portfolio experience that feels premium and effortless.
                 </p>
-                <div className="mt-6 flex justify-center">
+              </div>
+              {canManage && (
+                <div className="flex flex-col items-start gap-3 md:items-end">
+                  <div className="rounded-xl bg-black/10 px-4 py-3 text-sm backdrop-blur">
+                    <p className="text-sky-50">
+                      <span className="font-semibold">
+                        {properties.length ? properties.length : 'No'}
+                      </span>{' '}
+                      active properties
+                    </p>
+                    <p className="text-xs text-sky-100/80">
+                      Click &quot;Add Property&quot; to grow your portfolio.
+                    </p>
+                  </div>
                   <Button
-                    onClick={() => setShowForm(true)}
-                    className="gradient-primary shadow-glow text-white"
+                    onClick={() => setShowForm(!showForm)}
+                    className="inline-flex items-center gap-2 bg-white text-[#1e3a5f] hover:bg-sky-50"
                   >
-                    Add First Property
+                    <PlusCircle className="h-4 w-4" />
+                    {showForm ? 'Cancel' : 'Add Property'}
                   </Button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Info banner for restricted roles */}
+          {!canManage && (
+            <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 shadow-sm dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-100">
+              You are viewing a read‑only overview. Please contact an administrator to manage
+              properties.
+            </div>
+          )}
+
+          {/* Quick stats strip */}
+          <div className="grid gap-4 md:grid-cols-3">
+            <Card className="border-0 bg-white shadow-sm dark:bg-gray-900">
+              <CardContent className="flex items-center justify-between p-5">
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                    Total Properties
+                  </p>
+                  <p className="mt-2 text-2xl font-bold text-gray-900 dark:text-gray-100">
+                    {properties.length}
+                  </p>
+                </div>
+                <div className="rounded-full bg-sky-100 p-3 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300">
+                  <Building2 className="h-5 w-5" />
                 </div>
               </CardContent>
             </Card>
-          ) : (
-            properties.map(property => {
-              const unitsCount = property.units.length
-              const occupied = property.units.filter(u => u.isOccupied).length
-              const rate = unitsCount ? Math.round((occupied / unitsCount) * 100) : 0
 
-              return (
-                <Card
-                  key={property.id}
-                  className="gradient-card hover-lift relative overflow-hidden border border-blue-100/60 shadow-sm dark:border-blue-900/40"
-                >
-                  <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-500" />
-                  <CardHeader className="pb-4">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <CardTitle className="flex items-center gap-2 text-xl">
-                          <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white shadow-glow">
-                            {property.name.charAt(0).toUpperCase()}
-                          </span>
-                          <span>{property.name}</span>
-                        </CardTitle>
-                        <p className="mt-1 flex items-center text-sm text-gray-600 dark:text-gray-400">
-                          <MapPin className="mr-1.5 h-4 w-4 text-blue-500" />
-                          <span className="truncate">{property.address}</span>
-                        </p>
-                      </div>
-                      <div className="text-right text-xs text-gray-500 dark:text-gray-400">
-                        <p className="font-medium">Created</p>
-                        <p>
-                          {property.createdAt
-                            ? new Date(property.createdAt).toLocaleDateString()
-                            : '-'}
-                        </p>
-                      </div>
+            <Card className="border-0 bg-white shadow-sm dark:bg-gray-900">
+              <CardContent className="flex items-center justify-between p-5">
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                    Total Units
+                  </p>
+                  <p className="mt-2 text-2xl font-bold text-gray-900 dark:text-gray-100">
+                    {properties.reduce((acc, p) => acc + p.units.length, 0)}
+                  </p>
+                </div>
+                <div className="rounded-full bg-emerald-100 p-3 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+                  <Home className="h-5 w-5" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 bg-white shadow-sm dark:bg-gray-900 md:col-span-1">
+              <CardContent className="flex items-center justify-between p-5">
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                    Portfolio Occupancy
+                  </p>
+                  <p className="mt-2 text-2xl font-bold text-gray-900 dark:text-gray-100">
+                    {(() => {
+                      const totalUnits = properties.reduce((acc, p) => acc + p.units.length, 0)
+                      if (!totalUnits) return '—'
+                      const occupied = properties.reduce(
+                        (acc, p) => acc + p.units.filter(u => u.isOccupied).length,
+                        0
+                      )
+                      return `${Math.round((occupied / totalUnits) * 100)}%`
+                    })()}
+                  </p>
+                </div>
+                <div className="rounded-full bg-indigo-100 p-3 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300">
+                  <Users className="h-5 w-5" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Create form */}
+          {showForm && canManage && (
+            <Card className="border-0 bg-white shadow-md dark:bg-gray-900">
+              <CardHeader className="border-b border-gray-100 pb-4 dark:border-gray-800">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300">
+                    <PlusCircle className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg font-semibold">Add New Property</CardTitle>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Capture the essentials; units and residents can be linked afterwards.
+                    </p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label>Property Name</Label>
+                    <Input
+                      value={formData.name}
+                      onChange={e => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="Eden Avenue Residences"
+                      required
+                      disabled={submitting}
+                    />
+                  </div>
+                  <div className="space-y-2 md:col-span-1">
+                    <Label>Address</Label>
+                    <div className="relative">
+                      <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-gray-400">
+                        <MapPin className="h-4 w-4" />
+                      </span>
+                      <Input
+                        className="pl-9"
+                        value={formData.address}
+                        onChange={e => setFormData({ ...formData, address: e.target.value })}
+                        placeholder="123 Main St, City, State 12345"
+                        required
+                        disabled={submitting}
+                      />
                     </div>
-                  </CardHeader>
-                  <CardContent className="space-y-4 pt-0">
-                    <div className="grid grid-cols-3 gap-4 text-sm">
-                      <div>
-                        <p className="flex items-center text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                          <Home className="mr-1.5 h-3.5 w-3.5 text-blue-500" />
-                          Units
-                        </p>
-                        <p className="mt-1 text-base font-semibold text-gray-900 dark:text-gray-50">
-                          {unitsCount}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="flex items-center text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                          <Users className="mr-1.5 h-3.5 w-3.5 text-emerald-500" />
-                          Occupied
-                        </p>
-                        <p className="mt-1 text-base font-semibold text-gray-900 dark:text-gray-50">
-                          {occupied}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                          Availability
-                        </p>
-                        <p className="mt-1 text-base font-semibold text-gray-900 dark:text-gray-50">
-                          {rate}%
-                        </p>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="mb-1 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-                        <span>Occupancy</span>
-                        <span className="font-medium text-gray-700 dark:text-gray-300">
-                          {occupied}/{unitsCount || 0} units
-                        </span>
-                      </div>
-                      <div className="h-2 w-full rounded-full bg-gray-100 dark:bg-gray-800">
-                        <div
-                          className="h-2 rounded-full bg-gradient-to-r from-emerald-500 via-blue-500 to-indigo-500"
-                          style={{ width: `${rate}%` }}
-                        />
-                      </div>
-                    </div>
-                    <div className="pt-2">
-                      <Button
-                        variant="outline"
-                        className="w-full border-blue-100 bg-white/80 text-blue-700 hover:bg-blue-50 dark:border-blue-900/60 dark:bg-gray-950/60 dark:text-blue-300"
-                        onClick={() => router.push(`/properties/${property.id}`)}
-                      >
-                        View Details
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              )
-            })
+                  </div>
+                  <div className="md:col-span-2 flex items-center justify-between pt-2">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      You can enrich this property later with units, residents and notes.
+                    </p>
+                    <Button type="submit" disabled={submitting}>
+                      {submitting ? 'Creating...' : 'Create Property'}
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
           )}
+
+          {/* Property list */}
+          <section className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                Property portfolio
+              </h2>
+              {properties.length > 0 && (
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Click a card for rich unit‑level insights.
+                </p>
+              )}
+            </div>
+
+            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {properties.length === 0 ? (
+                <div className="col-span-full rounded-xl border border-dashed border-gray-300 bg-white/60 p-10 text-center text-sm text-gray-500 shadow-sm dark:border-gray-700 dark:bg-gray-900/40 dark:text-gray-400">
+                  <p className="font-medium">No properties yet</p>
+                  <p className="mt-1 text-xs">
+                    Use the &quot;Add Property&quot; action above to create your first asset.
+                  </p>
+                </div>
+              ) : (
+                properties.map(property => {
+                  const totalUnits = property.units.length
+                  const occupiedUnits = property.units.filter(u => u.isOccupied).length
+                  const occupancyRate =
+                    totalUnits === 0 ? 0 : Math.round((occupiedUnits / totalUnits) * 100)
+
+                  return (
+                    <Card
+                      key={property.id}
+                      className="group flex cursor-pointer flex-col overflow-hidden border-0 bg-white shadow-sm ring-1 ring-gray-100 transition hover:-translate-y-0.5 hover:shadow-md hover:ring-sky-200 dark:bg-gray-900 dark:ring-gray-800 dark:hover:ring-sky-600/40"
+                      onClick={() => router.push(`/properties/${property.id}`)}
+                    >
+                      <CardHeader className="flex flex-row items-start justify-between gap-3 pb-3">
+                        <div>
+                          <CardTitle className="flex items-center gap-2 text-base">
+                            <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300">
+                              <Building2 className="h-4 w-4" />
+                            </span>
+                            <span className="line-clamp-1">{property.name}</span>
+                          </CardTitle>
+                          <p className="mt-1 flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+                            <MapPin className="h-3 w-3" />
+                            <span className="line-clamp-1">{property.address}</span>
+                          </p>
+                        </div>
+                        <span
+                          className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+                          aria-label="Occupancy rate"
+                        >
+                          {totalUnits === 0 ? 'No Units' : `${occupancyRate}% Occupied`}
+                        </span>
+                      </CardHeader>
+                      <CardContent className="space-y-4 pt-0">
+                        <div className="grid grid-cols-2 gap-3 text-xs">
+                          <div className="rounded-lg bg-gray-50 p-3 dark:bg-gray-800/80">
+                            <p className="text-[11px] uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                              Total Units
+                            </p>
+                            <p className="mt-1 text-lg font-semibold text-gray-900 dark:text-gray-100">
+                              {totalUnits}
+                            </p>
+                          </div>
+                          <div className="rounded-lg bg-gray-50 p-3 dark:bg-gray-800/80">
+                            <p className="text-[11px] uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                              Occupied
+                            </p>
+                            <p className="mt-1 text-lg font-semibold text-emerald-600 dark:text-emerald-300">
+                              {occupiedUnits}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between text-[11px] text-gray-500 dark:text-gray-400">
+                            <span>Occupancy</span>
+                            <span>{totalUnits === 0 ? '—' : `${occupancyRate}%`}</span>
+                          </div>
+                          <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800">
+                            <div
+                              className={`h-full rounded-full ${
+                                occupancyRate > 89
+                                  ? 'bg-emerald-500'
+                                  : occupancyRate > 60
+                                  ? 'bg-sky-500'
+                                  : 'bg-amber-500'
+                              }`}
+                              style={{
+                                width: totalUnits === 0 ? '0%' : `${occupancyRate}%`,
+                              }}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-1 text-[11px] text-gray-500 dark:text-gray-400">
+                          <span>
+                            Created:{' '}
+                            {new Date(property.createdAt).toLocaleDateString(undefined, {
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                            })}
+                          </span>
+                          <span className="inline-flex items-center gap-1 text-sky-600 group-hover:text-sky-700 dark:text-sky-400">
+                            View details
+                            <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
+                              →
+                            </span>
+                          </span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )
+                })
+              )}
+            </div>
+          </section>
         </div>
-      </div>
+      </main>
+      <MobileNav />
     </div>
   )
 }
