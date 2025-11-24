@@ -85,7 +85,7 @@ export default function DashboardRequestsPage() {
       <NotificationListener />
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <TopBar onMenuClick={() => setSidebarOpen(prev => !prev)} />
-      <main className="md:ml-64 mt-16 p-4 md:p-8">
+      <main className="md:ml-64 mt-16 p-4 pb-24 md:p-8 md:pb-10">
         <div className="mx-auto flex max-w-7xl flex-col gap-6">
           {/* Hero header */}
           <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#1e3a5f] via-sky-700 to-emerald-600 p-6 md:p-8 text-white shadow-lg">

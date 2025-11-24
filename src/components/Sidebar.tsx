@@ -10,13 +10,12 @@ import {
   Bell,
   MessageSquare,
   Settings,
-  HelpCircle,
   ChevronDown,
   MoreVertical,
   Home,
+  X,
 } from 'lucide-react'
 import { useState } from 'react'
-import { X } from 'lucide-react'
 
 interface NavItem {
   id: string
@@ -38,6 +37,7 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
   const router = useRouter()
   const pathname = usePathname()
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false)
 
   const userRole = (session?.user as { role?: string })?.role || 'RESIDENT'
   const userName = session?.user?.name || session?.user?.email?.split('@')[0] || 'User'
@@ -194,9 +194,34 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                 {userRole === 'ADMIN' ? 'Super Admin' : userRole}
               </p>
             </div>
-            <button className="text-gray-400 hover:text-white">
-              <MoreVertical size={16} />
-            </button>
+            <div className="relative">
+              <button
+                className="text-gray-400 hover:text-white"
+                onClick={() => setProfileMenuOpen(prev => !prev)}
+                aria-label="Profile menu"
+              >
+                <MoreVertical size={16} />
+              </button>
+              {profileMenuOpen && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setProfileMenuOpen(false)}
+                  />
+                  <div className="absolute right-0 mt-2 w-40 rounded-lg bg-white text-gray-800 shadow-lg z-50">
+                    <button
+                      onClick={() => {
+                        setProfileMenuOpen(false)
+                        router.push('/profile')
+                      }}
+                      className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 rounded-t-lg"
+                    >
+                      View profile
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
 

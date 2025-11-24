@@ -47,7 +47,7 @@ export default function MobileNav() {
       id: 'profile',
       label: 'Profile',
       icon: User,
-      path: '/dashboard',
+      path: '/profile',
       show: true,
     },
   ]
