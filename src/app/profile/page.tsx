@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import Sidebar from '@/components/Sidebar'
 import TopBar from '@/components/TopBar'
 import MobileNav from '@/components/MobileNav'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card'
+import { Card, CardContent } from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
 import { Home, FileText, Bell, Sparkles, Clock } from 'lucide-react'
 
@@ -235,7 +235,9 @@ export default function ProfilePage() {
                     Notices published
                   </p>
                   <p className="mt-2 text-2xl font-bold text-gray-900">{myNotices.length}</p>
-                  <p className="mt-1 text-xs text-gray-500">Admin announcements you&apos;ve posted</p>
+                  <p className="mt-1 text-xs text-gray-500">
+                    Admin announcements you&apos;ve posted
+                  </p>
                 </div>
                 <div className="rounded-full bg-amber-100 p-3 text-amber-700">
                   <Bell className="h-5 w-5" />
@@ -307,5 +309,3 @@ export default function ProfilePage() {
     </div>
   )
 }
-
-

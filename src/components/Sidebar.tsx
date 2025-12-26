@@ -204,10 +204,7 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
               </button>
               {profileMenuOpen && (
                 <>
-                  <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setProfileMenuOpen(false)}
-                  />
+                  <div className="fixed inset-0 z-40" onClick={() => setProfileMenuOpen(false)} />
                   <div className="absolute right-0 mt-2 w-40 rounded-lg bg-white text-gray-800 shadow-lg z-50">
                     <button
                       onClick={() => {

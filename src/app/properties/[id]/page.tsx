@@ -365,7 +365,9 @@ export default function PropertyDetailsPage() {
                       <th className="px-4 py-2 font-medium text-gray-600 dark:text-gray-300">
                         Size (sq ft)
                       </th>
-                      <th className="px-4 py-2 font-medium text-gray-600 dark:text-gray-300">Rent</th>
+                      <th className="px-4 py-2 font-medium text-gray-600 dark:text-gray-300">
+                        Rent
+                      </th>
                       <th className="px-4 py-2 font-medium text-gray-600 dark:text-gray-300">
                         Status
                       </th>
@@ -406,7 +408,9 @@ export default function PropertyDetailsPage() {
                           </span>
                         </td>
                         <td className="px-4 py-2 text-gray-700 dark:text-gray-300">
-                          {unit.resident ? unit.resident.user.name || unit.resident.user.email : '-'}
+                          {unit.resident
+                            ? unit.resident.user.name || unit.resident.user.email
+                            : '-'}
                         </td>
                       </tr>
                     ))}

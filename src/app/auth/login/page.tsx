@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { signIn } from 'next-auth/react'
+import { motion } from 'framer-motion'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import Label from '@/components/ui/Label'
@@ -113,7 +114,12 @@ export default function LoginPage() {
           <h2 className="text-4xl font-bold gradient-text mb-2">Eden Avenue Management</h2>
           <p className="text-muted-foreground">Welcome back</p>
         </div>
-        <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-xl border border-border/50 p-8 hover-lift">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-xl border border-border/50 p-8 hover-lift"
+        >
           <h1 className="text-2xl font-bold mb-6 text-foreground">Login</h1>
           <form onSubmit={handleLogin} className="space-y-4">
             {error && (
@@ -163,7 +169,7 @@ export default function LoginPage() {
               </a>
             </div>
           </form>
-        </div>
+        </motion.div>
       </div>
     </div>
   )
