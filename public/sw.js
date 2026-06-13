@@ -1,9 +1,13 @@
 // Service Worker for Eden Avenue Management PWA
-const CACHE_NAME = 'eden-avenue-v2' // Updated version to force cache refresh
-const RUNTIME_CACHE = 'eden-avenue-runtime-v2'
+const CACHE_NAME = 'eden-avenue-v3' // Updated version to force cache refresh
+const RUNTIME_CACHE = 'eden-avenue-runtime-v3'
 
-// Assets to cache on install
-const STATIC_ASSETS = ['/', '/dashboard', '/auth/login', '/manifest.json', '/offline.html']
+// Assets to cache on install.
+// IMPORTANT: do NOT pre-cache HTML routes (like '/', '/dashboard', '/auth/login').
+// They are server-rendered and reference hashed /_next/ chunks, so a cached copy
+// goes stale on every deploy and can pin the wrong page (e.g. an old login redirect).
+// Only pre-cache truly static assets and the offline fallback.
+const STATIC_ASSETS = ['/manifest.json', '/offline.html']
 
 // Install event - cache static assets
 self.addEventListener('install', event => {
@@ -87,40 +91,52 @@ self.addEventListener('fetch', event => {
         })
     )
   } else {
-    // Production: Cache first, network as fallback
-    event.respondWith(
-      caches.match(event.request).then(cachedResponse => {
-        // Return cached version if available
-        if (cachedResponse) {
-          return cachedResponse
-        }
+    // Production
+    const isNavigation =
+      event.request.mode === 'navigate' || event.request.destination === 'document'
 
-        // Otherwise fetch from network
-        return fetch(event.request)
+    if (isNavigation) {
+      // Pages: network first, so deploys and the live landing page always win.
+      // Fall back to the cached copy (then offline page) only when the network fails.
+      event.respondWith(
+        fetch(event.request)
           .then(response => {
-            // Don't cache non-successful responses
+            if (response && response.status === 200 && response.type === 'basic') {
+              const responseToCache = response.clone()
+              caches.open(RUNTIME_CACHE).then(cache => {
+                cache.put(event.request, responseToCache)
+              })
+            }
+            return response
+          })
+          .catch(async () => {
+            const cached = await caches.match(event.request)
+            return cached || caches.match('/offline.html')
+          })
+      )
+    } else {
+      // Static assets (CSS/JS/images/fonts): cache first, network as fallback.
+      event.respondWith(
+        caches.match(event.request).then(cachedResponse => {
+          if (cachedResponse) {
+            return cachedResponse
+          }
+
+          return fetch(event.request).then(response => {
             if (!response || response.status !== 200 || response.type !== 'basic') {
               return response
             }
 
-            // Clone the response
             const responseToCache = response.clone()
-
-            // Cache the response
             caches.open(RUNTIME_CACHE).then(cache => {
               cache.put(event.request, responseToCache)
             })
 
             return response
           })
-          .catch(() => {
-            // If offline and page request, return offline page
-            if (event.request.destination === 'document') {
-              return caches.match('/offline.html')
-            }
-          })
-      })
-    )
+        })
+      )
+    }
   }
 })
 
